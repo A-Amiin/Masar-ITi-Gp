@@ -34,7 +34,7 @@ export default function ContactUs() {
   }
 
   return (
-    <section id="contact" dir="rtl" className="py-16 bg-white">
+    <section id="contact" dir="rtl" className="py-16 bg-white dark:bg-background">
       <div className="container max-w-4xl mx-auto space-y-10">
         <div className="text-center space-y-2">
           <h2 className="text-3xl font-bold text-brand-primary">تواصل معنا</h2>

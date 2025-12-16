@@ -1,9 +1,12 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Sun, Moon } from "lucide-react";
+import { Switch } from "@/components/ui/switch";
+import useInitTheme from "@/hooks/useInitTheme";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const { theme, toggleTheme } = useInitTheme();
 
   const links = [
     { href: "#home", label: "الرئيسية" },
@@ -16,7 +19,7 @@ const Navbar = () => {
   ];
 
   return (
-    <header className="w-full border-b border-border bg-background dark:bg-background-dark fixed top-0 left-0 z-50">
+    <header className="w-full border-b border-border bg-background dark:bg-background-dark fixed top-0 left-0 z-50 transition-colors duration-300">
       <div className="mx-auto max-w-7xl px-6">
         <div className="flex h-16 items-center justify-between flex-row-reverse">
 
@@ -24,10 +27,10 @@ const Navbar = () => {
           <div className="flex items-center gap-3">
             <a href="#home">
               <img
-              src="/masar-logo.png"
-              alt="masar-logo"
-              className="h-20 w-auto"
-            />
+                src="/masar-logo.png"
+                alt="masar-logo"
+                className="h-20 w-auto"
+              />
             </a>
           </div>
 
@@ -47,15 +50,49 @@ const Navbar = () => {
             </ul>
           </nav>
 
-          {/* CTA Desktop */}
+          {/* CTA + Theme Switch Desktop */}
           <div className="hidden md:flex items-center gap-4">
+            <Switch
+              checked={theme === "dark"}
+              onCheckedChange={toggleTheme}
+              className="relative w-16 h-8 rounded-full p-1 flex items-center transition-colors duration-300 bg-gray-300 dark:bg-gray-700"
+            >
+              <span
+                className={`
+                  absolute w-7 h-7 bg-white rounded-full shadow-md transform transition-transform duration-500
+                  flex items-center justify-center
+                  ${theme === "dark" ? "translate-x-8 rotate-0" : "translate-x-0 rotate-0"}
+                `}
+              >
+                {theme === "dark" ? (
+                  <Moon size={20} className="text-gray-800" />
+                ) : (
+                  <Sun size={20} className="text-yellow-400" />
+                )}
+              </span>
+            </Switch>
+
             <Button className="h-10 px-6 text-sm dark:bg-primary-dark dark:text-background-dark dark:hover:bg-primary-light dark:hover:text-background">
               تسجيل الدخول
             </Button>
           </div>
 
           {/* Mobile Menu Button */}
-          <div className="md:hidden flex items-center">
+          <div className="md:hidden flex items-center gap-4">
+            <Switch
+              checked={theme === "dark"}
+              onCheckedChange={toggleTheme}
+              className="relative w-12 h-6 bg-gray-300 dark:bg-gray-600 rounded-full p-1 flex items-center transition-all duration-300"
+            >
+              <span
+                className={`absolute w-4 h-4 bg-white rounded-full shadow-md transform transition-transform duration-300 ${
+                  theme === "dark" ? "translate-x-6" : "translate-x-0"
+                } flex items-center justify-center text-yellow-500`}
+              >
+                {theme === "dark" ? <Moon size={12} /> : <Sun size={12} />}
+              </span>
+            </Switch>
+
             <button
               onClick={() => setIsOpen(true)}
               className="text-muted-foreground dark:text-muted-foreground-dark"

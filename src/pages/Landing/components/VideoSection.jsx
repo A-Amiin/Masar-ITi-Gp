@@ -2,7 +2,7 @@ import { Play } from "lucide-react";
 
 const VideoSection = () => {
   return (
-    <section id="intro" className="py-16 bg-white dark:bg-background-dark">
+    <section id="intro" className="py-16 bg-white dark:bg-background">
       <div className="max-w-7xl mx-auto px-6 text-center">
         <h2 className="text-3xl sm:text-4xl font-bold text-primary dark:text-primary-dark mb-4">
           شاهد كيف يعمل مسار

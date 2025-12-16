@@ -1,5 +1,5 @@
 import { Card, CardContent } from "@/components/ui/card"
-import { Boxes, BarChart3, Share2, MapPinned, Users, Smartphone, ShieldCheck, Clock   } from "lucide-react"
+import { Boxes, BarChart3, Share2, MapPinned, Users, Smartphone, ShieldCheck, Clock } from "lucide-react"
 
 const features = [
   {
@@ -40,7 +40,7 @@ const features = [
   {
     title: "جدولة المهام",
     desc: "تخطيط وجدولة الطلبات بفعالية",
-    icon: Clock ,
+    icon: Clock,
   },
 ]
 
@@ -49,7 +49,7 @@ export default function FeatureSection() {
     <section
       id="features"
       dir="rtl"
-      className="py-20 px-6 bg-white"
+      className="py-20 px-6 bg-white dark:bg-background"
     >
       {/* Header */}
       <div className="text-center mb-14">
@@ -74,23 +74,22 @@ export default function FeatureSection() {
           return (
             <Card
               key={index}
-              className="bg-[#f2f2f2] border-none shadow-sm hover:shadow-md transition"
+              className="bg-[#f2f2f2] dark:bg-[#1f1f1f] border-none shadow-sm hover:shadow-md transition"
             >
               <CardContent className="p-6 text-center">
                 <div className="flex justify-center mb-4">
                   <Icon
                     size={36}
-                    style={{ color: "var(--brand-cyan)" }}
+                    className="text-brand-cyan dark:text-cyan-400"
                   />
                 </div>
 
-                <h3 className="text-lg font-semibold mb-2">
+                <h3 className="text-lg font-semibold mb-2 text-foreground dark:text-foreground-dark">
                   {feature.title}
                 </h3>
 
                 <p
-                  className="text-sm leading-relaxed"
-                  style={{ color: "var(--brand-gray)" }}
+                  className="text-sm leading-relaxed text-brand-gray dark:text-muted-foreground-dark"
                 >
                   {feature.desc}
                 </p>

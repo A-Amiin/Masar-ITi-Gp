@@ -46,7 +46,7 @@ const TestimonialsSection = () => {
           <Card
             key={index}
             className="
-              rounded-2xl border bg-white dark:bg-background-dark
+              rounded-2xl border bg-white dark:bg-background
               shadow-md hover:shadow-lg transition
             "
           >
@@ -56,7 +56,7 @@ const TestimonialsSection = () => {
                 {Array.from({ length: 5 }).map((_, i) => (
                   <Star
                     key={i}
-                    className="w-5 h-5 fill-[#FFC107] text-[#FFC107]"
+                    className="w-5 h-5 fill-[#FFC107] text-[#FFC107] dark:fill-yellow-400 dark:text-yellow-400"
                   />
                 ))}
               </div>
@@ -66,8 +66,8 @@ const TestimonialsSection = () => {
                 {item.text}
               </p>
 
-              <div className="border-t pt-4 mt-auto text-center">
-                <p className="font-semibold">{item.name}</p>
+              <div className="border-t border-border dark:border-muted-dark pt-4 mt-auto text-center">
+                <p className="font-semibold text-foreground dark:text-foreground-dark">{item.name}</p>
                 <p className="text-xs text-muted-foreground dark:text-muted-foreground-dark">
                   {item.role}
                 </p>
