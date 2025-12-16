@@ -4,6 +4,7 @@ import { Truck, Building2, Check } from "lucide-react"
 export default function AudienceSection() {
   return (
     <section
+      id="for-who"
       dir="rtl"
       className="py-24 px-6"
       style={{ background: "var(--background)" }}

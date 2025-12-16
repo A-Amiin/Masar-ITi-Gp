@@ -34,7 +34,7 @@ const JoinUs = () => {
   }
 
   return (
-    <section dir="rtl" className="py-20 px-6 bg-white dark:bg-background">
+    <section id="be-rep" dir="rtl" className="py-20 px-6 bg-white dark:bg-background">
       <div className="text-center mb-14">
         <h2 className="text-3xl md:text-4xl font-bold mb-4 text-primary dark:text-primary-dark">
           عايز تشتغل مندوب؟

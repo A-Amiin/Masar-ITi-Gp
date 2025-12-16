@@ -16,7 +16,9 @@ export default function Footer() {
             <div className="flex items-center gap-2 text-white font-bold text-lg">
               {/* <span className="text-brand-cyan">●</span>
               مسار */}
-                <img src="/masar-logo.png" alt="Masar Logo" className="h-20 relative -top-5"/>
+                <a href="#home">
+                  <img src="/masar-logo.png" alt="Masar Logo" className="h-20 relative -top-5"/>
+                </a>
             </div>
             <p className="text-sm leading-relaxed text-gray-400">
               نظام متكامل لإدارة مندوبي التوصيل والمبيعات

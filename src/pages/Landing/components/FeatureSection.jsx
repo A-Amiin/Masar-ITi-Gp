@@ -47,6 +47,7 @@ const features = [
 export default function FeatureSection() {
   return (
     <section
+      id="features"
       dir="rtl"
       className="py-20 px-6 bg-white"
     >

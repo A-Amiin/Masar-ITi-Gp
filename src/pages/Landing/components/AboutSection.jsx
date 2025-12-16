@@ -4,6 +4,7 @@ import { MapPin, Package, Users } from "lucide-react"
 export default function AboutSection() {
   return (
     <section
+      id="about"
       dir="rtl"
       className="py-16 px-6"
       style={{ background: "var(--background)" }}

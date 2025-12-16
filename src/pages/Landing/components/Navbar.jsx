@@ -22,11 +22,13 @@ const Navbar = () => {
 
           {/* Logo */}
           <div className="flex items-center gap-3">
-            <img
+            <a href="#home">
+              <img
               src="/masar-logo.png"
               alt="masar-logo"
               className="h-20 w-auto"
             />
+            </a>
           </div>
 
           {/* Desktop Navigation */}
