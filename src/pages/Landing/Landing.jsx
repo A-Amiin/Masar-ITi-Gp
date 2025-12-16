@@ -7,6 +7,8 @@ import AudienceSection from "./components/AudienceSection"
 import JoinUs from "./components/JoinUs"
 import TestimonialsSection from "./components/TestimonialsSection"
 import DaownloadApp from "./components/DownloadApp"
+import ContactUs from "./components/ContactUs"
+
 const Landing = () => {
   return (
     <div>
@@ -19,6 +21,7 @@ const Landing = () => {
       <JoinUs />
       <TestimonialsSection />
       <DaownloadApp />
+      <ContactUs />
     </div>
   )
 }
