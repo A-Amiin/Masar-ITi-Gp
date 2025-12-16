@@ -8,6 +8,7 @@ import JoinUs from "./components/JoinUs"
 import TestimonialsSection from "./components/TestimonialsSection"
 import DaownloadApp from "./components/DownloadApp"
 import ContactUs from "./components/ContactUs"
+import Footer from "./components/Footer"
 
 const Landing = () => {
   return (
@@ -22,6 +23,7 @@ const Landing = () => {
       <TestimonialsSection />
       <DaownloadApp />
       <ContactUs />
+      <Footer />
     </div>
   )
 }
