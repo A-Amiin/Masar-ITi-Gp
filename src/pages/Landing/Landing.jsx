@@ -6,7 +6,7 @@ import FeatureSection from "./components/FeatureSection"
 import AudienceSection from "./components/AudienceSection"
 import JoinUs from "./components/JoinUs"
 import TestimonialsSection from "./components/TestimonialsSection"
-
+import DaownloadApp from "./components/DownloadApp"
 const Landing = () => {
   return (
     <div>
@@ -18,6 +18,7 @@ const Landing = () => {
       <AudienceSection />
       <JoinUs />
       <TestimonialsSection />
+      <DaownloadApp />
     </div>
   )
 }
