@@ -3,6 +3,8 @@ import { Button } from "@/components/ui/button";
 import { Menu, X, Sun, Moon } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import useInitTheme from "@/hooks/useInitTheme";
+import { Link } from "react-router-dom";
+import ThemeToggle from "@/components/components/ThemeToggle";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -51,54 +53,24 @@ const Navbar = () => {
           </nav>
 
           {/* CTA + Theme Switch Desktop */}
-          <div className="hidden md:flex items-center gap-4">
-            <Switch
-              checked={theme === "dark"}
-              onCheckedChange={toggleTheme}
-              className="relative w-16 h-8 rounded-full p-1 flex items-center transition-colors duration-300 bg-gray-300 dark:bg-gray-700"
-            >
-              <span
-                className={`
-                  absolute w-7 h-7 bg-white rounded-full shadow-md transform transition-transform duration-500
-                  flex items-center justify-center
-                  ${theme === "dark" ? "translate-x-8 rotate-0" : "translate-x-0 rotate-0"}
-                `}
-              >
-                {theme === "dark" ? (
-                  <Moon size={20} className="text-gray-800" />
-                ) : (
-                  <Sun size={20} className="text-yellow-400" />
-                )}
-              </span>
-            </Switch>
-
-            <Button className="h-10 px-6 text-sm dark:bg-primary-dark dark:text-background-dark dark:hover:bg-primary-light dark:hover:text-background">
-              تسجيل الدخول
-            </Button>
+          <div  className="hidden md:flex items-center gap-4">
+            <Link to="/login">  
+              <Button className="h-10 px-6 text-sm">
+                تسجيل الدخول
+              </Button>
+            </Link>
+            <ThemeToggle theme={theme} toggleTheme={toggleTheme} />
           </div>
 
           {/* Mobile Menu Button */}
           <div className="md:hidden flex items-center gap-4">
-            <Switch
-              checked={theme === "dark"}
-              onCheckedChange={toggleTheme}
-              className="relative w-12 h-6 bg-gray-300 dark:bg-gray-600 rounded-full p-1 flex items-center transition-all duration-300"
-            >
-              <span
-                className={`absolute w-4 h-4 bg-white rounded-full shadow-md transform transition-transform duration-300 ${
-                  theme === "dark" ? "translate-x-6" : "translate-x-0"
-                } flex items-center justify-center text-yellow-500`}
-              >
-                {theme === "dark" ? <Moon size={12} /> : <Sun size={12} />}
-              </span>
-            </Switch>
-
             <button
               onClick={() => setIsOpen(true)}
               className="text-muted-foreground dark:text-muted-foreground-dark"
             >
               <Menu size={28} />
             </button>
+            <ThemeToggle theme={theme} toggleTheme={toggleTheme} />
           </div>
 
         </div>
@@ -130,12 +102,11 @@ const Navbar = () => {
                 </li>
               ))}
               <li className="mt-4">
-                <Button
-                  className="w-full h-10"
-                  onClick={() => setIsOpen(false)}
-                >
-                  تسجيل الدخول
-                </Button>
+                <Link to="/login" onClick={() => setIsOpen(false)}>
+                  <Button className="w-full h-10">
+                    تسجيل الدخول
+                  </Button>
+                </Link>
               </li>
             </ul>
           </div>
