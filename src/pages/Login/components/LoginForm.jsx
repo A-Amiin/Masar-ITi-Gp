@@ -4,18 +4,23 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
+import { loginUser } from "@/services/auth.service";
+import useAuthStore from "@/store/authStore";
+import { useNavigate } from "react-router-dom";
+
 
 const loginSchema = z.object({
-  email: z
+    email: z
     .string()
     .email("البريد الإلكتروني غير صحيح"),
-  password: z
+    password: z
     .string()
     .min(6, "كلمة المرور يجب أن تكون 6 أحرف على الأقل"),
 })
 
 
 export default function LoginForm() {
+    const navigate = useNavigate();
   const form = useForm({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -24,9 +29,23 @@ export default function LoginForm() {
     },
   })
 
-  const onSubmit = (values) => {
-    console.log("Login Data:", values)
+const onSubmit = async (values) => {
+  try {
+    const data = await loginUser(values.email, values.password);
+
+    useAuthStore.getState().login({
+      token: data.token,
+      user: data.user,
+    });
+
+    console.log("Logged in:", data);
+    navigate("/dashboard");
+  } catch (error) {
+    console.error(error.message);
+    alert("بيانات الدخول غير صحيحة");
   }
+};
+
 
   return (
     <Form {...form}>

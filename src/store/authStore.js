@@ -4,7 +4,7 @@ import { persist } from "zustand/middleware";
 const useAuthStore = create(
   persist(
     (set) => ({
-      token: null,      // Firebase ID Token
+      token: null,
       user: null,
 
       login: ({ token, user }) =>
