@@ -2,13 +2,13 @@ import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBZo0naK8i4mLbyHi6nCtP453cFSE6lQSo",
-  authDomain: "itiproject-ba6ab.firebaseapp.com",
-  databaseURL: "https://itiproject-ba6ab-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId: "itiproject-ba6ab",
-  storageBucket: "itiproject-ba6ab.firebasestorage.app",
-  messagingSenderId: "1050995001056",
-  appId: "1:1050995001056:web:f79a26f3cf9908b5953285",
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  databaseURL: import.meta.env.VITE_FIREBASE_DATABASE_URL,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
 };
 
 const app = initializeApp(firebaseConfig);
