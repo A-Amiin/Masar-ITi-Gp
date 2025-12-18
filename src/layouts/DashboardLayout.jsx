@@ -1,3 +1,4 @@
+import Sidebar from "@/components/components/Sidebar";
 import { Outlet } from "react-router-dom";
 
 const DashboardLayout = () => {
@@ -8,8 +9,13 @@ const DashboardLayout = () => {
     </div>
     <div className="flex flex-1">
       {/* Sidebar */}
-      <aside className="w-64 bg-white dark:bg-slate-800">
-        Sidebar
+      <aside dir="rtl"
+      className="
+        bg-white dark:bg-background-dark
+        border-l border-border dark:border-muted-dark
+        flex flex-col
+      ">
+        <Sidebar />
       </aside>
 
       {/* Main Content */}

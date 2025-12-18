@@ -1,0 +1,145 @@
+import { useState } from "react"
+import { Link, useLocation } from "react-router-dom"
+import { LayoutGrid, Users, User, MapPin, Box, ShoppingCart, FileText, MessageSquare, Settings, LogOut, ChevronLeft } from "lucide-react"
+import { cn } from "@/lib/utils"
+import { Button } from "@/components/ui/button"
+
+const menuItems = [
+  {
+    label: "لوحة التحكم",
+    icon: LayoutGrid,
+    route: "/dashboard",
+  },
+  {
+    label: "المندوبين",
+    icon: Users,
+    route: "/agents",
+  },
+  {
+    label: "العملاء",
+    icon: User,
+    route: "/customers",
+  },
+  {
+    label: "توزيع المهام",
+    icon: MapPin,
+    route: "/tasks",
+  },
+  {
+    label: "المخزون",
+    icon: Box,
+    route: "/inventory",
+  },
+  {
+    label: "الطلبات",
+    icon: ShoppingCart,
+    route: "/orders",
+  },
+  {
+    label: "التقارير",
+    icon: FileText,
+    route: "/reports",
+  },
+  {
+    label: "الدردشة",
+    icon: MessageSquare,
+    route: "/chat",
+  },
+  {
+    label: "الإعدادات",
+    icon: Settings,
+    route: "/settings",
+  },
+]
+
+const Sidebar = () => {
+  const location = useLocation()
+  const [collapsed, setCollapsed] = useState(false)
+
+  return (
+    <aside
+      className={cn(
+        `
+        flex flex-col h-screen
+        border-r border-border dark:border-muted-dark
+        transition-all duration-300
+        `,
+        collapsed ? "w-20" : "w-72"
+      )}
+    >
+      {/* Header */}
+      <div className="flex items-center justify-between px-6 py-3 border-b border-border dark:border-muted-dark">
+        {!collapsed && (
+          <img
+            src="/masar-logo.png"
+            alt="logo"
+            className="h-10 w-auto"
+          />
+        )}
+
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => setCollapsed(prev => !prev)}
+        >
+          <ChevronLeft
+            className={cn(
+              "w-5 h-5 transition-transform",
+              collapsed && "rotate-180"
+            )}
+          />
+        </Button>
+      </div>
+
+      {/* Menu */}
+      <nav className="flex-1 px-3 py-6 space-y-1">
+        {menuItems.map((item, index) => {
+          const Icon = item.icon
+          const isActive = location.pathname === item.route
+
+          return (
+            <Link
+              key={index}
+              to={item.route}
+              className={cn(
+                `
+                flex items-center
+                px-4 py-3 rounded-xl
+                text-sm transition
+                `,
+                collapsed ? "justify-center" : "gap-3",
+                isActive
+                  ? "bg-primary text-white"
+                  : "text-muted-foreground hover:bg-muted dark:hover:bg-muted-dark"
+              )}
+            >
+              <Icon className="w-5 h-5 shrink-0" />
+              {!collapsed && item.label}
+            </Link>
+          )
+        })}
+      </nav>
+
+      {/* Logout */}
+      <div className="px-3 py-4 border-t border-border dark:border-muted-dark">
+        <Link
+          to="/logout"
+          className={cn(
+            `
+            flex items-center
+            px-4 py-3 rounded-xl
+            text-sm transition
+            `,
+            collapsed ? "justify-center" : "gap-3",
+            "text-muted-foreground hover:bg-muted dark:hover:bg-muted-dark"
+          )}
+        >
+          <LogOut className="w-5 h-5 shrink-0" />
+          {!collapsed && "تسجيل الخروج"}
+        </Link>
+      </div>
+    </aside>
+  )
+}
+
+export default Sidebar
