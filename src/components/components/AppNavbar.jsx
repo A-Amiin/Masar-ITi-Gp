@@ -14,6 +14,7 @@ const AppNavbar = () => {
 
   return (
     <header className="
+      container-2xl mx-auto px-4
       h-16 w-full
       border-b border-border dark:border-muted-dark
       bg-background dark:bg-background-dark

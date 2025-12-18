@@ -70,11 +70,7 @@ const Sidebar = () => {
       {/* Header */}
       <div className="flex items-center justify-between px-6 py-3 border-b border-border dark:border-muted-dark">
         {!collapsed && (
-          <img
-            src="/masar-logo.png"
-            alt="logo"
-            className="h-10 w-auto"
-          />
+          <span className="text-lg font-semibold">مسار</span>
         )}
 
         <Button
