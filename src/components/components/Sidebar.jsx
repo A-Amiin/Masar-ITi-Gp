@@ -61,10 +61,10 @@ const Sidebar = () => {
       className={cn(
         `
         flex flex-col h-screen
-        border-r border-border dark:border-muted-dark
+        border-r border-border dark:border-gray-700
         transition-all duration-300
         `,
-        collapsed ? "w-20" : "w-72"
+        collapsed ? "w-20" : "w-64"
       )}
     >
       {/* Header */}
