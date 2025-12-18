@@ -52,37 +52,27 @@ const menuItems = [
   },
 ]
 
-const Sidebar = () => {
-  const location = useLocation()
-  const [collapsed, setCollapsed] = useState(false)
+const Sidebar = ({ collapsed, setCollapsed }) => {
+  const location = useLocation();
 
   return (
     <aside
       className={cn(
-        `
-        flex flex-col h-screen
-        border-r border-border dark:border-gray-700
-        transition-all duration-300
-        `,
+        `flex flex-col h-full border-l border-border dark:border-gray-800 bg-white dark:bg-background transition-all duration-300`,
         collapsed ? "w-20" : "w-64"
       )}
     >
       {/* Header */}
       <div className="flex items-center justify-between px-6 py-3 border-b border-border dark:border-muted-dark">
-        {!collapsed && (
-          <span className="text-lg font-semibold">مسار</span>
-        )}
+        {!collapsed && <span className="text-lg font-semibold">مسار</span>}
 
         <Button
-          variant="ghost"
+          className="bg-accent hover:bg-accent/80 p-2 rounded-md cursor-pointer"
           size="icon"
           onClick={() => setCollapsed(prev => !prev)}
         >
           <ChevronLeft
-            className={cn(
-              "w-5 h-5 transition-transform",
-              collapsed && "rotate-180"
-            )}
+            className={cn("w-5 h-5 transition-transform", collapsed && "rotate-180")}
           />
         </Button>
       </div>
@@ -90,19 +80,15 @@ const Sidebar = () => {
       {/* Menu */}
       <nav className="flex-1 px-3 py-6 space-y-1">
         {menuItems.map((item, index) => {
-          const Icon = item.icon
-          const isActive = location.pathname === item.route
+          const Icon = item.icon;
+          const isActive = location.pathname === item.route;
 
           return (
             <Link
               key={index}
               to={item.route}
               className={cn(
-                `
-                flex items-center
-                px-4 py-3 rounded-xl
-                text-sm transition
-                `,
+                `flex items-center px-4 py-3 rounded-xl text-sm transition`,
                 collapsed ? "justify-center" : "gap-3",
                 isActive
                   ? "bg-primary text-white"
@@ -112,7 +98,7 @@ const Sidebar = () => {
               <Icon className="w-5 h-5 shrink-0" />
               {!collapsed && item.label}
             </Link>
-          )
+          );
         })}
       </nav>
 
@@ -121,11 +107,7 @@ const Sidebar = () => {
         <Link
           to="/logout"
           className={cn(
-            `
-            flex items-center
-            px-4 py-3 rounded-xl
-            text-sm transition
-            `,
+            `flex items-center px-4 py-3 rounded-xl text-sm transition`,
             collapsed ? "justify-center" : "gap-3",
             "text-muted-foreground hover:bg-muted dark:hover:bg-muted-dark"
           )}
@@ -135,7 +117,6 @@ const Sidebar = () => {
         </Link>
       </div>
     </aside>
-  )
-}
-
+  );
+};
 export default Sidebar
