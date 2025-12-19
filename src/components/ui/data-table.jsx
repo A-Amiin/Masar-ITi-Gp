@@ -60,7 +60,7 @@ export function DataTable({
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
                   <TableHead
-                  className={"bg-gray-100"}
+                  className={"bg-gray-100 dark:bg-gray-800"}
                   key={header.id}>
                     {header.isPlaceholder
                       ? null
