@@ -59,7 +59,9 @@ export function DataTable({
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
-                  <TableHead key={header.id}>
+                  <TableHead
+                  className={"bg-gray-100"}
+                  key={header.id}>
                     {header.isPlaceholder
                       ? null
                       : flexRender(

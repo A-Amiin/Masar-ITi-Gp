@@ -25,11 +25,13 @@ const Customers = () => {
     <div className="space-y-4">
       <h1 className="text-xl font-bold">قائمة العملاء</h1>
 
-      <DataTable
+      <div className="border rounded-md bg-white dark:bg-background p-4">
+        <DataTable
         columns={columns}
         data={customers}
         handleCreate={() => setOpen(true)}
       />
+      </div>
 
       <CreateCustomerDialog
         open={open}
