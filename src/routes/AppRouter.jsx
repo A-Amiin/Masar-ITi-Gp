@@ -1,12 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-
-// layouts
 import DashboardLayout from "@/layouts/DashboardLayout";
-
-// routes
 import ProtectedRoute from "@/routes/ProtectedRoute";
-
-// pages
 import Landing from "@/pages/Landing/Landing";
 import Login from "@/pages/Login/Login";
 import Dashboard from "@/pages/Dashboard/Dashboard";
