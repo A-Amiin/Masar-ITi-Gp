@@ -1,8 +1,8 @@
 import { z } from "zod"
 
 export const customerSchema = z.object({
-  name: z.string().min(2, "اسم العميل العربي مطلوب"),
-  nameEn: z.string().min(2, "اسم العميل الإنجليزي مطلوب"),
+  nameAr: z.string().min(2, "اسم العميل العربي مطلوب"),
+  name: z.string().min(2, "اسم العميل الإنجليزي مطلوب"),
   phone: z.string().min(10, "رقم الهاتف غير صحيح"),
   locationAr: z.string().min(2, "الموقع العربي مطلوب"),
   locationEn: z.string().min(2, "الموقع الإنجليزي مطلوب"),

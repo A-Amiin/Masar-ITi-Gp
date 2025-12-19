@@ -2,9 +2,9 @@ import { cn } from "@/lib/utils"
 
 export function ClassificationBadge({ value }) {
   const map = {
-    "تصنيف A": "bg-blue-600 text-white",
-    "تصنيف B": "bg-teal-500 text-white",
-    "تصنيف C": "bg-yellow-400 text-black",
+    "A": "bg-blue-600 text-white",
+    "B": "bg-teal-500 text-white",
+    "C": "bg-yellow-400 text-black",
   }
 
   return (

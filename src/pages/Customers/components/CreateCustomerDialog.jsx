@@ -42,7 +42,7 @@ export function CreateCustomerDialog({ open, onOpenChange, createCustomer }) {
             {/* اسم عربي */}
             <FormField
               control={form.control}
-              name="name"
+              name="nameAr"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>اسم العميل (عربي)</FormLabel>
@@ -55,7 +55,7 @@ export function CreateCustomerDialog({ open, onOpenChange, createCustomer }) {
             {/* اسم إنجليزي */}
             <FormField
               control={form.control}
-              name="nameEn"
+              name="name"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>اسم العميل (إنجليزي)</FormLabel>

@@ -1,8 +1,8 @@
 import { useState } from "react"
 import { useCustomers } from "@/hooks/useCustomers"
 import { DataTable } from "@/components/ui/data-table"
-import { getColumns } from "./components/columns"
-import { CreateCustomerDialog } from "./components/create-customer-dialog"
+import { getColumns } from "./components/Columns"
+import { CreateCustomerDialog } from "./components/CreateCustomerDialog"
 
 const Customers = () => {
   const { customers, loading, error, removeCustomer, createCustomer } = useCustomers()
