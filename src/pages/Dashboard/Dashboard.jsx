@@ -1,6 +1,10 @@
+import NavDashboard from "./components/NavDashboard"
+
 const Dashboard = () => {
   return (
-    <div className="h-screen">Dashboard</div>
+    <div className="h-screen">
+      <NavDashboard />
+    </div>
   )
 }
 
