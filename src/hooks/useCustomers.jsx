@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
-import { addItem, updateItem, deleteItem, getItems } from "@/utils/firestoreCRUD";
+import { addItem, updateItem, deleteItem, getItems, getCustomerById } from "@/utils/firestoreCRUD";
 
 export const useCustomers = () => {
   const [customers, setCustomers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [selectedCustomer, setSelectedCustomer] = useState({});
 
   const fetchCustomers = async () => {
     setLoading(true);
@@ -48,6 +49,21 @@ export const useCustomers = () => {
     }
   };
 
+  const getCustomerByIdWrapper = async (id) => {
+    console.log(id)
+    setLoading(true);
+    setError(null);
+    try {
+      const customer = await getCustomerById(id);
+      setSelectedCustomer(customer);
+    } catch (err) {
+      console.error(err);
+      setError(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const removeCustomer = async (id) => {
     setLoading(true);
     setError(null);
@@ -66,5 +82,5 @@ export const useCustomers = () => {
     fetchCustomers();
   }, []);
 
-  return { customers, loading, error, fetchCustomers, createCustomer, editCustomer, removeCustomer };
+  return { customers, loading, error, fetchCustomers, createCustomer, editCustomer, getCustomerByIdWrapper, selectedCustomer, removeCustomer };
 };

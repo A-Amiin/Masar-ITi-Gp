@@ -3,14 +3,14 @@ import { useCustomers } from "@/hooks/useCustomers"
 import { DataTable } from "@/components/ui/data-table"
 import { getColumns } from "./components/Columns"
 import { CreateCustomerDialog } from "./components/CreateCustomerDialog"
-
+import  ViewCustomerDialog  from "./components/ViewCustomerDialog"
 const Customers = () => {
-  const { customers, loading, error, removeCustomer, createCustomer } = useCustomers()
+  const { customers, loading, error, selectedCustomer, removeCustomer, createCustomer, getCustomerByIdWrapper } = useCustomers()
 
   const [open, setOpen] = useState(false)
 
   const columns = getColumns(
-    (row) => console.log("VIEW", row),
+    (row) => getCustomerByIdWrapper(row.id),
     (id) => removeCustomer(id)
   )
 
@@ -38,6 +38,12 @@ const Customers = () => {
         onOpenChange={setOpen}
         onSubmit={handleCreate}
         createCustomer={createCustomer}
+      />
+
+      <ViewCustomerDialog
+        open={Boolean(selectedCustomer && selectedCustomer.id)}
+        onOpenChange={() => {}}
+        customer={selectedCustomer}
       />
     </div>
   )
