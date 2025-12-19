@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input"
 export function DataTable({
   columns,
   data,
+  handleCreate = () => {},
 }) {
   const [columnFilters, setColumnFilters] = React.useState([])
   const [sorting, setSorting] = React.useState([])
@@ -32,14 +33,24 @@ export function DataTable({
     <div className="space-y-4">
       
       {/* 🔍 Filter */}
-      <Input
-        placeholder="بحث بالاسم..."
-        value={(table.getColumn("name")?.getFilterValue()) ?? ""}
-        onChange={(e) =>
-          table.getColumn("name")?.setFilterValue(e.target.value)
-        }
-        className="max-w-sm"
-      />
+      <div className="flex items-center justify-between py-4">
+        <Input
+          placeholder="بحث بالاسم..."
+          value={(table.getColumn("name")?.getFilterValue()) ?? ""}
+          onChange={(e) =>
+            table.getColumn("name")?.setFilterValue(e.target.value)
+          }
+          className="max-w-sm"
+        />
+
+        <Button
+          size="sm"
+          onClick={() => handleCreate()}
+        >
+         إضافه عميل جديد
+        </Button>
+
+      </div>
 
       {/* 📋 Table */}
       <div className="rounded-md border">
