@@ -2,36 +2,61 @@ import { Eye, Trash2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { ClassificationBadge } from "./ClassificationBadge"
 
-export const getColumns = () => [
+export const getColumns = (onView, onDelete) => [
   {
     accessorKey: "name",
-    header: "اسم العميل",
+    header: () => (
+      <div className="text-center">اسم العميل</div>
+    ),
     cell: ({ row }) => (
-      <span className="font-medium">{row.original.name}</span>
+      <div className="text-center font-medium">
+        {row.original.name}
+      </div>
     ),
   },
   {
     accessorKey: "phone",
-    header: "الهاتف",
+    header: () => (
+      <div className="text-center">الهاتف</div>
+    ),
+    cell: ({ row }) => (
+      <div className="text-center">{row.original.phone}</div>
+    ),
   },
   {
     accessorKey: "activity",
-    header: "نوع النشاط",
+    header: () => (
+      <div className="text-center">نوع النشاط</div>
+    ),
+    cell: ({ row }) => (
+      <div className="text-center">{row.original.activity}</div>
+    ),
   },
   {
     accessorKey: "type",
-    header: "نوع العميل",
+    header: () => (
+      <div className="text-center">نوع العميل</div>
+    ),
+    cell: ({ row }) => (
+      <div className="text-center">{row.original.type}</div>
+    ),
   },
   {
     accessorKey: "classification",
-    header: "التصنيف",
+    header: () => (
+      <div className="text-center">التصنيف</div>
+    ),
     cell: ({ row }) => (
-      <ClassificationBadge value={row.original.classification} />
+      <div className="flex justify-center">
+        <ClassificationBadge value={row.original.classification} />
+      </div>
     ),
   },
   {
     id: "actions",
-    header: "الإجراءات",
+    header: () => (
+      <div className="text-center">الإجراءات</div>
+    ),
     cell: ({ row }) => (
       <div className="flex justify-center gap-2">
         <Button
