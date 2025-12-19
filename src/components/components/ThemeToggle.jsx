@@ -3,7 +3,7 @@ import { Switch } from "@/components/ui/switch"
 
 export default function ThemeToggle({ theme, toggleTheme }) {
   return (
-    <div className="flex items-center gap-2">
+    <div dir="ltr" className="flex items-center gap-2">
       <Sun
         className={`w-4 h-4 transition ${
           theme === "light"
