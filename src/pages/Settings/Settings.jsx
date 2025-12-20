@@ -1,13 +1,50 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
+
 const Settings = () => {
   return (
-  <div className="p-6 space-y-6" dir="rtl">
-
+    <div className="p-6 space-y-6" dir="rtl">
+      {/* ===== Top Grid ===== */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
+        {/* ================= اللغة (يمين) ================= */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-base">اللغة</CardTitle>
+          </CardHeader>
+
+          <CardContent className="space-y-3">
+            <Label>اللغة</Label>
+            <Select>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="العربية" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="ar">العربية</SelectItem>
+                <SelectItem value="en">English</SelectItem>
+              </SelectContent>
+            </Select>
+
+            <p className="text-sm text-muted-foreground">
+              اختر لغة التطبيق (مع دعم RTL للعربية)
+            </p>
+          </CardContent>
+        </Card>
+
+        {/* ================= المظهر (شمال) ================= */}
         <Card>
           <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle className="text-base">المظهر</CardTitle>
@@ -33,31 +70,35 @@ const Settings = () => {
           </CardContent>
         </Card>
 
- 
+        {/* ================= حجم الخط (يمين) ================= */}
         <Card>
           <CardHeader>
-            <CardTitle className="text-base">اللغة</CardTitle>
+            <CardTitle className="text-base">حجم الخط</CardTitle>
           </CardHeader>
 
           <CardContent className="space-y-3">
-            <Label>اللغة</Label>
+            <Label>حجم الخط</Label>
+
             <Select>
-              <SelectTrigger>
-                <SelectValue placeholder="العربية" />
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="متوسط (16px)" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="ar">العربية</SelectItem>
-                <SelectItem value="en">English</SelectItem>
+                <SelectItem value="14">صغير (14px)</SelectItem>
+                <SelectItem value="16">متوسط (16px)</SelectItem>
+                <SelectItem value="18">كبير (18px)</SelectItem>
               </SelectContent>
             </Select>
 
-            <p className="text-sm text-muted-foreground">
-              اختر لغة التطبيق (مع دعم RTL للعربية)
-            </p>
+            <div className="text-sm text-muted-foreground space-y-1">
+              <p>حجم صغير (14px)</p>
+              <p>حجم متوسط (16px)</p>
+              <p>حجم كبير (18px)</p>
+            </div>
           </CardContent>
         </Card>
 
-
+        {/* ================= معلومات التطبيق (شمال) ================= */}
         <Card>
           <CardHeader>
             <CardTitle className="text-base">معلومات التطبيق</CardTitle>
@@ -80,61 +121,42 @@ const Settings = () => {
             ))}
           </CardContent>
         </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-base">حجم الخط</CardTitle>
-          </CardHeader>
-
-          <CardContent className="space-y-3">
-            <Label>حجم الخط</Label>
-            <Select>
-              <SelectTrigger>
-                <SelectValue placeholder="متوسط (16px)" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="14">صغير (14px)</SelectItem>
-                <SelectItem value="16">متوسط (16px)</SelectItem>
-                <SelectItem value="18">كبير (18px)</SelectItem>
-              </SelectContent>
-            </Select>
-
-            <div className="text-sm text-muted-foreground space-y-1">
-              <p>(14px) حجم صغير</p>
-              <p>(16px) حجم متوسط</p>
-              <p>(18px) حجم كبير</p>
-            </div>
-          </CardContent>
-        </Card>
       </div>
 
-
+      {/* ================= ألوان العلامة التجارية ================= */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">ألوان العلامة التجارية</CardTitle>
+          <CardTitle className="text-base">
+            ألوان العلامة التجارية
+          </CardTitle>
         </CardHeader>
 
-        <CardContent className="flex flex-wrap gap-4">
+        <CardContent className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4">
           {[
-            "#212121",
-            "#616161",
-            "#EEEEEE",
-            "#FFC107",
-            "#00ACC1",
-            "#0D47A1",
-          ].map((color) => (
-            <div key={color} className="text-center">
+            { color: "#212121", label: "الرمادي الداكن" },
+            { color: "#616161", label: "الرمادي" },
+            { color: "#EEEEEE", label: "الرمادي الفاتح" },
+            { color: "#FFC107", label: "الذهبي" },
+            { color: "#00ACC1", label: "السماوي" },
+            { color: "#0D47A1", label: "الأزرق الأساسي" },
+          ].map((item) => (
+            <div key={item.color} className="text-center">
               <div
-                className="w-20 h-10 rounded-md mb-1"
-                style={{ backgroundColor: color }}
+                className="w-full h-12 rounded-md mb-1"
+                style={{ backgroundColor: item.color }}
               />
-              <span className="text-xs text-muted-foreground">{color}</span>
+              <span className="text-xs text-muted-foreground">
+                {item.label}
+              </span>
+              <div className="text-[10px] text-muted-foreground">
+                {item.color}
+              </div>
             </div>
           ))}
         </CardContent>
       </Card>
     </div>
-  )
-}
+  );
+};
 
-export default Settings
+export default Settings;
