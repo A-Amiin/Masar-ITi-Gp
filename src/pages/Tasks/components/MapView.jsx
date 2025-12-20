@@ -10,15 +10,13 @@ import L from "leaflet";
 import "leaflet-routing-machine";
 import "leaflet-routing-machine/dist/leaflet-routing-machine.css";
 
-/* ===============================
-   Route Controller Component
-================================ */
+
 const RouteController = ({ customers, optimizeRoute }) => {
   const map = useMap();
   const routingRef = useRef(null);
 
   useEffect(() => {
-    // 🧹 امسحي أي route قديم
+    
     if (routingRef.current) {
       map.removeControl(routingRef.current);
       routingRef.current = null;
@@ -53,9 +51,7 @@ const RouteController = ({ customers, optimizeRoute }) => {
   return null;
 };
 
-/* ===============================
-   Main Map View
-================================ */
+
 const MapView = ({ customers = [], optimizeRoute }) => {
   return (
     <MapContainer
@@ -68,7 +64,7 @@ const MapView = ({ customers = [], optimizeRoute }) => {
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
 
-      {/* 📍 Markers */}
+
       {customers.map((c) => {
         const lat = parseFloat(c.lat);
         const lng = parseFloat(c.lng);
@@ -87,7 +83,7 @@ const MapView = ({ customers = [], optimizeRoute }) => {
         );
       })}
 
-      {/* 🧠 Route Logic */}
+  
       <RouteController
         customers={customers}
         optimizeRoute={optimizeRoute}

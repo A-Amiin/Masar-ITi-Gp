@@ -3,14 +3,14 @@ import MapView from "./components/MapView";
 import AssignForm from "./components/AssignForm";
 import StatsCard from "./components/StatsCard";
 
-// لو لسه موصلة Firebase
+
 import { subscribeToCustomers } from "@/services/customers.service";
 
 const Tasks = () => {
-  const [customers, setCustomers] = useState([]);      // ✅ لازم
+  const [customers, setCustomers] = useState([]);      
   const [optimizeRoute, setOptimizeRoute] = useState(false);
 
-  // 🔄 تحميل النقط من Firebase
+
   useEffect(() => {
     const unsub = subscribeToCustomers(setCustomers);
     return () => unsub && unsub();

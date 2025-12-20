@@ -9,9 +9,7 @@ import DeleteProductModal from "./DeleteProductModal";
 
 import { deleteInventoryProduct } from "@/services/inventory.service";
 
-/* =====================
-   Pagination config
-===================== */
+
 const ITEMS_PER_PAGE = 5;
 
 const InventoryTable = ({ products }) => {
@@ -20,9 +18,6 @@ const InventoryTable = ({ products }) => {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
 
-  /* =====================
-     Pagination logic
-  ===================== */
   const totalPages = Math.ceil(products.length / ITEMS_PER_PAGE);
 
   const paginatedProducts = useMemo(() => {
@@ -31,9 +26,7 @@ const InventoryTable = ({ products }) => {
     return products.slice(start, end);
   }, [products, currentPage]);
 
-  /* =====================
-     Delete
-  ===================== */
+
   const handleConfirmDelete = async () => {
     if (!selectedProduct) return;
 
@@ -46,9 +39,7 @@ const InventoryTable = ({ products }) => {
     }
   };
 
-  /* =====================
-     Helpers
-  ===================== */
+
   const formatDate = (timestamp) => {
     if (!timestamp) return "--";
     return timestamp.toDate().toLocaleDateString("ar-EG");
@@ -58,7 +49,7 @@ const InventoryTable = ({ products }) => {
     <>
       <Card>
         <CardContent className="p-0">
-          {/* ===== Header ===== */}
+   
           <div className="p-4 flex items-center justify-between">
             <h3 className="font-medium text-base">قائمة المنتجات</h3>
             <span className="text-sm text-muted-foreground">
@@ -66,7 +57,7 @@ const InventoryTable = ({ products }) => {
             </span>
           </div>
 
-          {/* ===== Table ===== */}
+     
           <div className="mx-4 mb-2 overflow-hidden rounded-lg border">
             <table className="w-full text-sm">
               <thead className="bg-muted text-muted-foreground">
@@ -87,10 +78,10 @@ const InventoryTable = ({ products }) => {
                     key={p.id}
                     className="border-b last:border-b-0"
                   >
-                    {/* Name */}
+     
                     <td className="p-3">{p.nameAr}</td>
 
-                    {/* Price */}
+   
                     <td className="p-3">
                       <span
                         className={
@@ -103,7 +94,7 @@ const InventoryTable = ({ products }) => {
                       </span>
                     </td>
 
-                    {/* Discount */}
+
                     <td className="p-3 space-y-1">
                       {p.hasDiscount ? (
                         <>
@@ -119,17 +110,16 @@ const InventoryTable = ({ products }) => {
                       )}
                     </td>
 
-                    {/* Quantity */}
                     <td className="p-3">
                       <Badge>{p.quantity}</Badge>
                     </td>
 
-                    {/* Expire */}
+     
                     <td className="p-3">
                       {formatDate(p.expireDate)}
                     </td>
 
-                    {/* Status */}
+        
                     <td className="p-3">
                       <Badge
                         variant={
@@ -142,7 +132,7 @@ const InventoryTable = ({ products }) => {
                       </Badge>
                     </td>
 
-                    {/* Actions */}
+        
                     <td className="p-3 flex gap-3">
                       <button
                         onClick={() => {
@@ -181,7 +171,7 @@ const InventoryTable = ({ products }) => {
             </table>
           </div>
 
-          {/* ===== Pagination ===== */}
+
           {totalPages > 1 && (
             <div className="flex items-center justify-between px-4 pb-4">
               <span className="text-sm text-muted-foreground">
@@ -216,14 +206,13 @@ const InventoryTable = ({ products }) => {
         </CardContent>
       </Card>
 
-      {/* ===== Edit Modal ===== */}
       <EditProductModal
         open={openEdit}
         product={selectedProduct}
         onClose={() => setOpenEdit(false)}
       />
 
-      {/* ===== Delete Modal ===== */}
+
       <DeleteProductModal
         open={openDelete}
         productName={selectedProduct?.nameAr}

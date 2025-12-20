@@ -25,7 +25,7 @@ const AssignForm = ({ onOptimizeRoute }) => {
         </CardHeader>
 
         <CardContent className="space-y-4">
-          {/* ===== المندوب ===== */}
+         
           <div>
             <label className="text-sm text-muted-foreground">
               اختر المندوب
@@ -41,7 +41,7 @@ const AssignForm = ({ onOptimizeRoute }) => {
             </Select>
           </div>
 
-          {/* ===== المنطقة ===== */}
+          
           <div>
             <label className="text-sm text-muted-foreground">
               اختر المنطقة
@@ -63,7 +63,7 @@ const AssignForm = ({ onOptimizeRoute }) => {
             </Select>
           </div>
 
-          {/* ===== نوع المهمة ===== */}
+          
           <div>
             <label className="text-sm text-muted-foreground">
               نوع المهمة
@@ -79,7 +79,6 @@ const AssignForm = ({ onOptimizeRoute }) => {
             </Select>
           </div>
 
-          {/* ===== زر أفضل مسار ===== */}
           <Button
             type="button"
             variant="outline"
@@ -90,14 +89,14 @@ const AssignForm = ({ onOptimizeRoute }) => {
             تحديد أفضل مسار للمندوب
           </Button>
 
-          {/* ===== توزيع المهمة ===== */}
+   
           <Button className="w-full" onClick={() => setOpenConfirm(true)}>
             توزيع مهمة
           </Button>
         </CardContent>
       </Card>
 
-      {/* ===== Confirm Modal ===== */}
+
       <AssignTaskModal
         open={openConfirm}
         onClose={() => setOpenConfirm(false)}
@@ -107,7 +106,7 @@ const AssignForm = ({ onOptimizeRoute }) => {
         }}
       />
 
-      {/* ===== Success Modal ===== */}
+
       <AssignSuccessModal
         open={openSuccess}
         onClose={() => setOpenSuccess(false)}
