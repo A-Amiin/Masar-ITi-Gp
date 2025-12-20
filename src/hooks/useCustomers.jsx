@@ -1,86 +1,90 @@
-import { useState, useEffect } from "react";
-import { addItem, updateItem, deleteItem, getItems, getCustomerById } from "@/utils/firestoreCRUD";
+import { useState, useEffect } from "react"
+import { addItem, updateItem, deleteItem, getItems, getCustomerById } from "@/utils/firestoreCRUD"
 
 export const useCustomers = () => {
-  const [customers, setCustomers] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [selectedCustomer, setSelectedCustomer] = useState({});
+  const [customers, setCustomers] = useState([])
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(null)
+
+  const [selectedCustomer, setSelectedCustomer] = useState(null)
 
   const fetchCustomers = async () => {
-    setLoading(true);
-    setError(null);
+    setLoading(true)
+    setError(null)
     try {
-      const data = await getItems();
-      setCustomers(data);
+      const data = await getItems()
+      setCustomers(data)
     } catch (err) {
-      console.error(err);
-      setError(err);
+      console.error(err)
+      setError(err)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   const createCustomer = async (data) => {
-    setLoading(true);
-    setError(null);
+    setLoading(true)
+    setError(null)
     try {
-      await addItem(data);
-      await fetchCustomers();
+      await addItem(data)
+      await fetchCustomers()
     } catch (err) {
-      console.error(err);
-      setError(err);
+      console.error(err)
+      setError(err)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   const editCustomer = async (id, data) => {
-    setLoading(true);
-    setError(null);
+    setLoading(true)
+    setError(null)
     try {
-      await updateItem(id, data);
-      await fetchCustomers();
+      await updateItem(id, data)
+      await fetchCustomers()
     } catch (err) {
-      console.error(err);
-      setError(err);
+      console.error(err)
+      setError(err)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   const getCustomerByIdWrapper = async (id) => {
-    console.log(id)
-    setLoading(true);
-    setError(null);
+    setLoading(true)
+    setError(null)
     try {
-      const customer = await getCustomerById(id);
-      setSelectedCustomer(customer);
+      const customer = await getCustomerById(id)
+      setSelectedCustomer(customer)
     } catch (err) {
-      console.error(err);
-      setError(err);
+      console.error(err)
+      setError(err)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   const removeCustomer = async (id) => {
-    setLoading(true);
-    setError(null);
+    setLoading(true)
+    setError(null)
     try {
-      await deleteItem(id);
-      await fetchCustomers();
+      await deleteItem(id)
+      await fetchCustomers()
     } catch (err) {
-      console.error(err);
-      setError(err);
+      console.error(err)
+      setError(err)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
+
+  const closeCustomerView = () => {
+    setSelectedCustomer(null)
+  }
 
   useEffect(() => {
-    fetchCustomers();
-  }, []);
+    fetchCustomers()
+  }, [])
 
-  return { customers, loading, error, fetchCustomers, createCustomer, editCustomer, getCustomerByIdWrapper, selectedCustomer, removeCustomer };
-};
+  return { customers, loading, error, fetchCustomers, createCustomer, editCustomer, removeCustomer, getCustomerByIdWrapper, selectedCustomer, closeCustomerView }
+}

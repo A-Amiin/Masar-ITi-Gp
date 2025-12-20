@@ -3,9 +3,10 @@ import { useCustomers } from "@/hooks/useCustomers"
 import { DataTable } from "@/components/ui/data-table"
 import { getColumns } from "./components/columns"
 import { CreateCustomerDialog } from "./components/CreateCustomerDialog"
-import  ViewCustomerDialog  from "./components/ViewCustomerDialog"
+import ViewCustomerDialog from "./components/ViewCustomerDialog"
+
 const Customers = () => {
-  const { customers, loading, error, selectedCustomer, removeCustomer, createCustomer, getCustomerByIdWrapper } = useCustomers()
+  const { customers, loading, error, selectedCustomer, removeCustomer, createCustomer, getCustomerByIdWrapper, closeCustomerView } = useCustomers()
 
   const [open, setOpen] = useState(false)
 
@@ -14,7 +15,8 @@ const Customers = () => {
     (id) => removeCustomer(id)
   )
 
-  const handleCreate = (data) => {
+  const handleCreate = async (data) => {
+    await createCustomer(data)
     setOpen(false)
   }
 
@@ -27,26 +29,27 @@ const Customers = () => {
 
       <div className="border rounded-md bg-white dark:bg-background p-4">
         <DataTable
-        columns={columns}
-        data={customers}
-        handleCreate={() => setOpen(true)}
-      />
+          columns={columns}
+          data={customers}
+          handleCreate={() => setOpen(true)}
+        />
       </div>
 
       <CreateCustomerDialog
         open={open}
         onOpenChange={setOpen}
         onSubmit={handleCreate}
-        createCustomer={createCustomer}
       />
 
       <ViewCustomerDialog
-        open={Boolean(selectedCustomer && selectedCustomer.id)}
-        onOpenChange={() => {}}
+        open={!!selectedCustomer}
+        onOpenChange={(open) => {
+          if (!open) closeCustomerView()
+        }}
         customer={selectedCustomer}
       />
     </div>
   )
 }
 
-export default Customers;
+export default Customers
