@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Trash, Pencil } from "lucide-react";
 
 import EditProductModal from "./EditProductModal";
@@ -8,12 +9,31 @@ import DeleteProductModal from "./DeleteProductModal";
 
 import { deleteInventoryProduct } from "@/services/inventory.service";
 
+/* =====================
+   Pagination config
+===================== */
+const ITEMS_PER_PAGE = 5;
+
 const InventoryTable = ({ products }) => {
   const [openEdit, setOpenEdit] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
 
+  /* =====================
+     Pagination logic
+  ===================== */
+  const totalPages = Math.ceil(products.length / ITEMS_PER_PAGE);
 
+  const paginatedProducts = useMemo(() => {
+    const start = (currentPage - 1) * ITEMS_PER_PAGE;
+    const end = currentPage * ITEMS_PER_PAGE;
+    return products.slice(start, end);
+  }, [products, currentPage]);
+
+  /* =====================
+     Delete
+  ===================== */
   const handleConfirmDelete = async () => {
     if (!selectedProduct) return;
 
@@ -26,7 +46,9 @@ const InventoryTable = ({ products }) => {
     }
   };
 
-
+  /* =====================
+     Helpers
+  ===================== */
   const formatDate = (timestamp) => {
     if (!timestamp) return "--";
     return timestamp.toDate().toLocaleDateString("ar-EG");
@@ -36,7 +58,7 @@ const InventoryTable = ({ products }) => {
     <>
       <Card>
         <CardContent className="p-0">
-
+          {/* ===== Header ===== */}
           <div className="p-4 flex items-center justify-between">
             <h3 className="font-medium text-base">قائمة المنتجات</h3>
             <span className="text-sm text-muted-foreground">
@@ -44,10 +66,9 @@ const InventoryTable = ({ products }) => {
             </span>
           </div>
 
-
-          <div className="mx-4 mb-4 overflow-hidden rounded-lg border">
+          {/* ===== Table ===== */}
+          <div className="mx-4 mb-2 overflow-hidden rounded-lg border">
             <table className="w-full text-sm">
-     
               <thead className="bg-muted text-muted-foreground">
                 <tr>
                   <th className="p-3 text-right">اسم المنتج</th>
@@ -60,15 +81,16 @@ const InventoryTable = ({ products }) => {
                 </tr>
               </thead>
 
-      
               <tbody>
-                {products.map((p) => (
+                {paginatedProducts.map((p) => (
                   <tr
                     key={p.id}
                     className="border-b last:border-b-0"
                   >
+                    {/* Name */}
                     <td className="p-3">{p.nameAr}</td>
 
+                    {/* Price */}
                     <td className="p-3">
                       <span
                         className={
@@ -81,7 +103,7 @@ const InventoryTable = ({ products }) => {
                       </span>
                     </td>
 
-
+                    {/* Discount */}
                     <td className="p-3 space-y-1">
                       {p.hasDiscount ? (
                         <>
@@ -97,15 +119,17 @@ const InventoryTable = ({ products }) => {
                       )}
                     </td>
 
-
+                    {/* Quantity */}
                     <td className="p-3">
                       <Badge>{p.quantity}</Badge>
                     </td>
 
+                    {/* Expire */}
                     <td className="p-3">
                       {formatDate(p.expireDate)}
                     </td>
 
+                    {/* Status */}
                     <td className="p-3">
                       <Badge
                         variant={
@@ -118,8 +142,8 @@ const InventoryTable = ({ products }) => {
                       </Badge>
                     </td>
 
+                    {/* Actions */}
                     <td className="p-3 flex gap-3">
-  
                       <button
                         onClick={() => {
                           setSelectedProduct(p);
@@ -130,7 +154,6 @@ const InventoryTable = ({ products }) => {
                         <Pencil className="w-4 h-4" />
                       </button>
 
-          
                       <button
                         onClick={() => {
                           setSelectedProduct(p);
@@ -157,17 +180,50 @@ const InventoryTable = ({ products }) => {
               </tbody>
             </table>
           </div>
+
+          {/* ===== Pagination ===== */}
+          {totalPages > 1 && (
+            <div className="flex items-center justify-between px-4 pb-4">
+              <span className="text-sm text-muted-foreground">
+                صفحة {currentPage} من {totalPages}
+              </span>
+
+              <div className="flex gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  disabled={currentPage === 1}
+                  onClick={() =>
+                    setCurrentPage((p) => p - 1)
+                  }
+                >
+                  السابق
+                </Button>
+
+                <Button
+                  variant="outline"
+                  size="sm"
+                  disabled={currentPage === totalPages}
+                  onClick={() =>
+                    setCurrentPage((p) => p + 1)
+                  }
+                >
+                  التالي
+                </Button>
+              </div>
+            </div>
+          )}
         </CardContent>
       </Card>
 
- 
+      {/* ===== Edit Modal ===== */}
       <EditProductModal
         open={openEdit}
         product={selectedProduct}
         onClose={() => setOpenEdit(false)}
       />
 
-
+      {/* ===== Delete Modal ===== */}
       <DeleteProductModal
         open={openDelete}
         productName={selectedProduct?.nameAr}
