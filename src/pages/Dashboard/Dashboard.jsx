@@ -1,9 +1,11 @@
+import ChartsSection from "./components/charts/ChartsSection"
 import NavDashboard from "./components/NavDashboard"
 
 const Dashboard = () => {
   return (
-    <div className="h-screen">
+    <div>
       <NavDashboard />
+      <ChartsSection />
     </div>
   )
 }
