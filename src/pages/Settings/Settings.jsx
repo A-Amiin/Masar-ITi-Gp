@@ -1,13 +1,16 @@
 import { useState, useEffect } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Switch } from "@/components/ui/switch"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Label } from "@/components/ui/label"
+import ThemeToggle from "@/components/components/ThemeToggle"
+import useInitTheme from "@/hooks/useInitTheme"
+
 
 const Settings = () => {
   const [fontSize, setFontSize] = useState("16px")
   const [language, setLanguage] = useState("ar")
   const [darkMode, setDarkMode] = useState(false)
+  const { theme , toggleTheme} = useInitTheme()
 
   useEffect(() => {
     document.documentElement.style.fontSize = fontSize
@@ -46,7 +49,12 @@ const Settings = () => {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle className="text-base">المظهر</CardTitle>
-            <Switch checked={darkMode} onCheckedChange={setDarkMode} />
+            <ThemeToggle
+              darkMode={darkMode}
+              setDarkMode={setDarkMode}
+              toggleTheme={toggleTheme}
+              theme={theme}
+            />
           </CardHeader>
 
           <CardContent>
@@ -55,14 +63,24 @@ const Settings = () => {
             </p>
 
             <div className="grid grid-cols-2 gap-4">
-              <div className={`border rounded-lg p-3 flex flex-col items-center gap-2 cursor-pointer ${darkMode ? "border-2 border-primary" : ""}`}>
+              {/* كارد الداكن */}
+              <div
+                onClick={() => toggleTheme("dark")}
+                className={`border rounded-lg p-3 flex flex-col items-center gap-2 cursor-pointer transition-all duration-200
+                  ${theme === "dark" ? "border-2 border-primary bg-slate-900/90" : "hover:border-gray-400 hover:bg-slate-900/20"}`}
+              >
                 <div className="w-full h-20 bg-slate-900 rounded-md" />
-                <span className="text-sm">داكن</span>
+                <span className={`text-sm ${theme === "dark" ? "text-white" : "text-black"}`}>داكن</span>
               </div>
 
-              <div className={`border rounded-lg p-3 flex flex-col items-center gap-2 cursor-pointer ${!darkMode ? "border-2 border-primary" : ""}`}>
+              {/* كارد الفاتح */}
+              <div
+                onClick={() => toggleTheme("light")}
+                className={`border rounded-lg p-3 flex flex-col items-center gap-2 cursor-pointer transition-all duration-200
+                  ${theme === "light" ? "border-2 border-primary bg-slate-100/90" : "hover:border-gray-400 hover:bg-slate-100/50"}`}
+              >
                 <div className="w-full h-20 bg-slate-100 rounded-md" />
-                <span className="text-sm">فاتح</span>
+                <span className={`text-sm ${theme === "light" ? "text-black" : "text-gray-700"}`}>فاتح</span>
               </div>
             </div>
           </CardContent>
