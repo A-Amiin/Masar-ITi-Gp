@@ -4,12 +4,12 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Label } from "@/components/ui/label"
 import ThemeToggle from "@/components/components/ThemeToggle"
 import useInitTheme from "@/hooks/useInitTheme"
-
+import { useFontStore } from "@/store/fontStore";
 
 const Settings = () => {
-  const [fontSize, setFontSize] = useState("16px")
   const [language, setLanguage] = useState("ar")
   const [darkMode, setDarkMode] = useState(false)
+  const { fontSize, setFontSize } = useFontStore()
   const { theme , toggleTheme} = useInitTheme()
 
   useEffect(() => {
