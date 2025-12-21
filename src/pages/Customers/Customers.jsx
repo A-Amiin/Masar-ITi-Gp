@@ -38,7 +38,7 @@ const Customers = () => {
       <CreateCustomerDialog
         open={open}
         onOpenChange={setOpen}
-        onSubmit={handleCreate}
+        createCustomer={handleCreate}
       />
 
       <ViewCustomerDialog

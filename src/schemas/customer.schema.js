@@ -12,4 +12,8 @@ export const customerSchema = z.object({
   lastVisit: z.string(),
   visitsCount: z.coerce.number().min(0),
   totalSpent: z.coerce.number().min(0),
+  address: z.object({
+    lat: z.coerce.number(),
+    lng: z.coerce.number(),
+  }),
 })
