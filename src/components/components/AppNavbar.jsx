@@ -28,6 +28,9 @@ const AppNavbar = () => {
       {/* Right */}
       {user && (
         <div className="flex items-center gap-4">
+          {/* Dark mode switch */}
+            <ThemeToggle theme={theme} toggleTheme={toggleTheme}/>
+            
           {/* User Avatar */}
           <div className="flex items-center gap-3">
             <Avatar className="h-9 w-9">
@@ -47,17 +50,6 @@ const AppNavbar = () => {
             </div>
           </div>
 
-          {/* Dark mode switch */}
-            <ThemeToggle theme={theme} toggleTheme={toggleTheme}/>
-          
-          {/* Logout */}
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => signOut(auth)}
-          >
-            <LogOut className="w-5 h-5" />
-          </Button>
         </div>
       )}
     </header>
