@@ -1,26 +1,24 @@
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Switch } from "@/components/ui/switch";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Label } from "@/components/ui/label";
+import { useState, useEffect } from "react"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Switch } from "@/components/ui/switch"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Label } from "@/components/ui/label"
 
 const Settings = () => {
+  const [fontSize, setFontSize] = useState("16px")
+  const [language, setLanguage] = useState("ar")
+  const [darkMode, setDarkMode] = useState(false)
+
+  useEffect(() => {
+    document.documentElement.style.fontSize = fontSize
+  }, [fontSize])
+
   return (
     <div className="p-6 space-y-6" dir="rtl">
       {/* ===== Top Grid ===== */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
-        {/* ================= اللغة (يمين) ================= */}
+        {/* ================= اللغة ================= */}
         <Card>
           <CardHeader>
             <CardTitle className="text-base">اللغة</CardTitle>
@@ -28,7 +26,7 @@ const Settings = () => {
 
           <CardContent className="space-y-3">
             <Label>اللغة</Label>
-            <Select>
+            <Select onValueChange={(value) => setLanguage(value)} value={language}>
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="العربية" />
               </SelectTrigger>
@@ -44,11 +42,11 @@ const Settings = () => {
           </CardContent>
         </Card>
 
-        {/* ================= المظهر (شمال) ================= */}
+        {/* ================= المظهر ================= */}
         <Card>
           <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle className="text-base">المظهر</CardTitle>
-            <Switch />
+            <Switch checked={darkMode} onCheckedChange={setDarkMode} />
           </CardHeader>
 
           <CardContent>
@@ -57,12 +55,12 @@ const Settings = () => {
             </p>
 
             <div className="grid grid-cols-2 gap-4">
-              <div className="border rounded-lg p-3 flex flex-col items-center gap-2 cursor-pointer">
+              <div className={`border rounded-lg p-3 flex flex-col items-center gap-2 cursor-pointer ${darkMode ? "border-2 border-primary" : ""}`}>
                 <div className="w-full h-20 bg-slate-900 rounded-md" />
                 <span className="text-sm">داكن</span>
               </div>
 
-              <div className="border-2 border-primary rounded-lg p-3 flex flex-col items-center gap-2 cursor-pointer">
+              <div className={`border rounded-lg p-3 flex flex-col items-center gap-2 cursor-pointer ${!darkMode ? "border-2 border-primary" : ""}`}>
                 <div className="w-full h-20 bg-slate-100 rounded-md" />
                 <span className="text-sm">فاتح</span>
               </div>
@@ -70,7 +68,7 @@ const Settings = () => {
           </CardContent>
         </Card>
 
-        {/* ================= حجم الخط (يمين) ================= */}
+        {/* ================= حجم الخط ================= */}
         <Card>
           <CardHeader>
             <CardTitle className="text-base">حجم الخط</CardTitle>
@@ -79,7 +77,7 @@ const Settings = () => {
           <CardContent className="space-y-3">
             <Label>حجم الخط</Label>
 
-            <Select>
+            <Select onValueChange={(value) => setFontSize(value + "px")} value={fontSize.replace("px","")}>
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="متوسط (16px)" />
               </SelectTrigger>
@@ -98,14 +96,14 @@ const Settings = () => {
           </CardContent>
         </Card>
 
-        {/* ================= معلومات التطبيق (شمال) ================= */}
+        {/* ================= معلومات التطبيق ================= */}
         <Card>
           <CardHeader>
             <CardTitle className="text-base">معلومات التطبيق</CardTitle>
           </CardHeader>
 
           <CardContent className="space-y-3">
-            {[
+            {[ 
               { label: "إصدار التطبيق", value: "v1.0.0" },
               { label: "اسم التطبيق", value: "Masar | مسار" },
               { label: "نوع المستخدم", value: "مسؤول" },
@@ -156,7 +154,7 @@ const Settings = () => {
         </CardContent>
       </Card>
     </div>
-  );
-};
+  )
+}
 
-export default Settings;
+export default Settings
