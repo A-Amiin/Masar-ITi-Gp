@@ -1,93 +1,34 @@
-import { useEffect, useRef } from "react";
-import {
-  MapContainer,
-  TileLayer,
-  Marker,
-  Popup,
-  useMap,
-} from "react-leaflet";
-import L from "leaflet";
-import "leaflet-routing-machine";
-import "leaflet-routing-machine/dist/leaflet-routing-machine.css";
+import React, { useEffect, useState } from 'react';
+import { MapContainer, TileLayer, Marker, Popup, Polyline } from "react-leaflet";
+import 'leaflet/dist/leaflet.css';
 
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "@/lib/firebase";
 
-const RouteController = ({ customers, optimizeRoute }) => {
-  const map = useMap();
-  const routingRef = useRef(null);
+import L from 'leaflet';
+delete L.Icon.Default.prototype._getIconUrl;
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
+  iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
+  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
+});
 
-  useEffect(() => {
-    
-    if (routingRef.current) {
-      map.removeControl(routingRef.current);
-      routingRef.current = null;
-    }
-
-    if (!optimizeRoute) return;
-
-    const waypoints = customers
-      .map((c) => {
-        const lat = parseFloat(c.lat);
-        const lng = parseFloat(c.lng);
-        if (isNaN(lat) || isNaN(lng)) return null;
-        return L.latLng(lat, lng);
-      })
-      .filter(Boolean);
-
-    if (waypoints.length < 2) return;
-
-    routingRef.current = L.Routing.control({
-      waypoints,
-      addWaypoints: false,
-      draggableWaypoints: false,
-      routeWhileDragging: false,
-      fitSelectedRoutes: true,
-      show: false,
-      lineOptions: {
-        styles: [{ color: "#2563eb", weight: 5 }],
-      },
-    }).addTo(map);
-  }, [optimizeRoute, customers, map]);
-
-  return null;
-};
-
-
-const MapView = ({ customers = [], optimizeRoute }) => {
+const MapView = ({ customers, routePoints }) => {
   return (
     <MapContainer
-      center={[30.0444, 31.2357]}
-      zoom={11}
+      center={customers[0] ? [customers[0].lat, customers[0].lng] : [30.06, 31.33]}
+      zoom={13}
       style={{ height: "100%", width: "100%" }}
     >
-      <TileLayer
-        attribution="© OpenStreetMap"
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-      />
+      <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
 
+      {customers.map(c => (
+        <Marker key={c.id} position={[c.lat, c.lng]} />
+      ))}
 
-      {customers.map((c) => {
-        const lat = parseFloat(c.lat);
-        const lng = parseFloat(c.lng);
-        if (isNaN(lat) || isNaN(lng)) return null;
-
-        return (
-          <Marker key={c.id} position={[lat, lng]}>
-            <Popup>
-              <p className="font-semibold">{c.name}</p>
-              <p>{c.activity}</p>
-              <p className="text-sm text-muted-foreground">
-                {c.classification}
-              </p>
-            </Popup>
-          </Marker>
-        );
-      })}
-
-  
-      <RouteController
-        customers={customers}
-        optimizeRoute={optimizeRoute}
-      />
+      {routePoints.length > 1 && (
+        <Polyline positions={routePoints} color="blue" weight={5} />
+      )}
     </MapContainer>
   );
 };

@@ -12,8 +12,6 @@ export const customerSchema = z.object({
   lastVisit: z.string(),
   visitsCount: z.coerce.number().min(0),
   totalSpent: z.coerce.number().min(0),
-  address: z.object({
-    lat: z.coerce.number(),
-    lng: z.coerce.number(),
-  }),
+  lat: z.coerce.number().min(-90).max(90, "خط العرض غير صحيح"),
+  lng: z.coerce.number().min(-180).max(180, "خط الطول غير صحيح"),
 })

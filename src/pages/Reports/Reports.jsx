@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -25,9 +27,15 @@ import {
   FileBarChart,
 } from "lucide-react";
 
-import SalesBarChart from "./SalesBarChart";
+import SalesHeatMap from "./components/SalesHeatMap"
+import TasksReport from "./components/TasksReport"
+
+import AgentsReport from "./components/AgentsReport";
+
 
 const Reports = () => {
+  const [reportType, setReportType] = useState("sales");
+
   return (
     <div className="space-y-6" dir="rtl">
 
@@ -81,50 +89,72 @@ const Reports = () => {
         />
       </div>
 
-      <Card>
-        <CardContent className="p-4 flex justify-start">
-          <Select>
-            <SelectTrigger className="w-40">
-              <FileBarChart className="w-4 h-4 ml-2" />
-              <SelectValue placeholder="تقرير المبيعات" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="sales">تقرير المبيعات</SelectItem>
-              <SelectItem value="map">خريطة المبيعات</SelectItem>
-            </SelectContent>
-          </Select>
+<Card>
+  <CardContent className="p-4 flex justify-start">
+    <Select value={reportType} onValueChange={setReportType}>
+<SelectTrigger className="w-56">
+
+        <FileBarChart className="w-4 h-4 ml-2" />
+        <SelectValue placeholder="اختر التقرير" />
+      </SelectTrigger>
+
+      <SelectContent>
+        <SelectItem value="sales">تقرير المبيعات</SelectItem>
+        <SelectItem value="tasks">تقرير المهام</SelectItem>
+        <SelectItem value="agents">تقرير المندوبين</SelectItem>
+      </SelectContent>
+    </Select>
+  </CardContent>
+</Card>
+
+
+ <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 [direction:ltr]">
+
+  {reportType === "sales" && (
+    <>
+      {/* ملخص المبيعات */}
+      <Card className="[direction:rtl]">
+        <CardHeader>
+          <CardTitle className="text-base">ملخص المبيعات</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-3">
+          <SummaryRow label="مبيعات اليوم" value="45,250 جنيه" />
+          <SummaryRow label="مبيعات الأسبوع" value="312,400 جنيه" />
+          <SummaryRow label="مبيعات الشهر" value="1,245,800 جنيه" />
+          <SummaryRow
+            label="إجمالي السنة"
+            value="12,458,600 جنيه"
+            highlight
+          />
         </CardContent>
       </Card>
 
- 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 [direction:ltr]">
-        
+      <Card className="[direction:rtl]">
+        <CardHeader>
+          <CardTitle className="text-base">نظرة عامة على المبيعات</CardTitle>
+        </CardHeader>
+        <CardContent>
+       <SalesHeatMap/>
+        </CardContent>
+      </Card>
+    </>
+  )}
 
-        <Card className="[direction:rtl]">
-          <CardHeader>
-            <CardTitle className="text-base">ملخص المبيعات</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            <SummaryRow label="مبيعات اليوم" value="45,250 جنيه" />
-            <SummaryRow label="مبيعات الأسبوع" value="312,400 جنيه" />
-            <SummaryRow label="مبيعات الشهر" value="1,245,800 جنيه" />
-            <SummaryRow
-              label="إجمالي السنة"
-              value="12,458,600 جنيه"
-              highlight
-            />
-          </CardContent>
-        </Card>
+{reportType === "tasks" && (
+  <div className="lg:col-span-2">
+    <TasksReport />
+  </div>
+)}
 
-        <Card className="[direction:rtl]">
-          <CardHeader>
-            <CardTitle className="text-base">نظرة عامة على المبيعات</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <SalesBarChart />
-          </CardContent>
-        </Card>
-      </div>
+{reportType === "agents" && (
+  <div className="lg:col-span-2">
+    <AgentsReport />
+  </div>
+)}
+
+
+</div>
+
     </div>
   );
 };
