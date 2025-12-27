@@ -15,6 +15,8 @@ export function CreateCustomerDialog({ open, onOpenChange, createCustomer }) {
       visitsCount: 0,
       totalSpent: 0,
       classification: "B",
+      lat: 30.0444, // Cairo latitude
+      lng: 31.2357, // Cairo longitude
     },
   })
 
@@ -206,6 +208,32 @@ export function CreateCustomerDialog({ open, onOpenChange, createCustomer }) {
                 <FormItem>
                   <FormLabel>إجمالي الإنفاق (جنيه)</FormLabel>
                   <Input type="number" {...field} />
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {/* خط العرض */}
+            <FormField
+              control={form.control}
+              name="lat"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>خط العرض (Latitude)</FormLabel>
+                  <Input type="number" step="any" {...field} />
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {/* خط الطول */}
+            <FormField
+              control={form.control}
+              name="lng"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>خط الطول (Longitude)</FormLabel>
+                  <Input type="number" step="any" {...field} />
                   <FormMessage />
                 </FormItem>
               )}
