@@ -1,11 +1,8 @@
-import { LogOut, User } from "lucide-react"
-import { signOut } from "firebase/auth"
-import { auth } from "@/lib/firebase"
 import { useAdminUser } from "@/hooks/useAdminUser"
-import { Button } from "@/components/ui/button"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import useInitTheme from "@/hooks/useInitTheme"
 import ThemeToggle from "./ThemeToggle"
+import { Link } from "react-router-dom"
+import UserAvatarDialog from "@/components/components/UserAvatarDialog"
 
 const AppNavbar = () => {
   const { user, loading } = useAdminUser()
@@ -22,42 +19,18 @@ const AppNavbar = () => {
     ">
       {/* Left */}
       <div className="flex items-center gap-3">
+        <Link to="/dashboard" className="flex items-center gap-2">
         <img src="/masar-logo.png" alt="logo" className="h-20" />
+        </Link>
       </div>
 
       {/* Right */}
       {user && (
         <div className="flex items-center gap-4">
-          {/* User Avatar */}
-          <div className="flex items-center gap-3">
-            <Avatar className="h-9 w-9">
-              <AvatarImage src={user?.avatar} alt={user?.name} />
-              <AvatarFallback>
-                <User className="w-4 h-4" />
-              </AvatarFallback>
-            </Avatar>
-
-            <div className="leading-tight text-right">
-              <p className="text-sm font-medium text-foreground">
-                {user?.name}
-              </p>
-              <p className="text-xs text-muted-foreground">
-                Admin
-              </p>
-            </div>
-          </div>
-
           {/* Dark mode switch */}
             <ThemeToggle theme={theme} toggleTheme={toggleTheme}/>
-          
-          {/* Logout */}
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => signOut(auth)}
-          >
-            <LogOut className="w-5 h-5" />
-          </Button>
+          {/* User Avatar */}
+          <UserAvatarDialog user={user} />
         </div>
       )}
     </header>

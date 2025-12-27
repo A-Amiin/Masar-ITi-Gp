@@ -1,14 +1,16 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import {Select,SelectContent,SelectItem,SelectTrigger,SelectValue } from "@/components/ui/select"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Form, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { customerSchema } from "@/schemas/customer.schema"
-
+import { GeoPoint } from "firebase/firestore"
+import { useCustomers } from "@/hooks/useCustomers"
 
 export function CreateCustomerDialog({ open, onOpenChange, createCustomer }) {
+  
   const form = useForm({
     resolver: zodResolver(customerSchema),
     defaultValues: {
@@ -17,18 +19,36 @@ export function CreateCustomerDialog({ open, onOpenChange, createCustomer }) {
       classification: "B",
       lat: 30.0444, // Cairo latitude
       lng: 31.2357, // Cairo longitude
+      address: {
+        lat: "",
+        lng: "",
+      },
     },
   })
-
+  
   const onSubmit = (data) => {
-    createCustomer(data)
+    const payload = {
+      ...data,
+      address: new GeoPoint(
+        Number(data.address.lat),
+        Number(data.address.lng)
+      ),
+    }
+    
+    createCustomer(payload)
     onOpenChange(false)
     form.reset()
   }
-
+  
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-3xl">
+      <DialogContent
+        className="
+          max-w-3xl
+          [&>button]:left-4
+          [&>button]:right-auto
+        "
+      >
         <DialogHeader>
           <DialogTitle className="text-right">
             إضافة عميل
@@ -36,7 +56,7 @@ export function CreateCustomerDialog({ open, onOpenChange, createCustomer }) {
         </DialogHeader>
 
         <Form {...form}>
-          <form 
+          <form
             dir="rtl"
             onSubmit={form.handleSubmit(onSubmit)}
             className="grid grid-cols-2 gap-4"
@@ -113,7 +133,10 @@ export function CreateCustomerDialog({ open, onOpenChange, createCustomer }) {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>نوع العميل</FormLabel>
-                  <Select onValueChange={field.onChange}>
+                  <Select
+                    onValueChange={field.onChange}
+                    value={field.value}
+                  >
                     <SelectTrigger>
                       <SelectValue placeholder="اختر النوع" />
                     </SelectTrigger>
@@ -134,7 +157,10 @@ export function CreateCustomerDialog({ open, onOpenChange, createCustomer }) {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>نوع النشاط التجاري</FormLabel>
-                  <Select onValueChange={field.onChange}>
+                  <Select
+                    onValueChange={field.onChange}
+                    value={field.value}
+                  >
                     <SelectTrigger>
                       <SelectValue placeholder="اختر النوع" />
                     </SelectTrigger>
@@ -158,7 +184,7 @@ export function CreateCustomerDialog({ open, onOpenChange, createCustomer }) {
                   <FormLabel>التصنيف</FormLabel>
                   <Select
                     onValueChange={field.onChange}
-                    defaultValue={field.value}
+                    value={field.value}
                   >
                     <SelectTrigger>
                       <SelectValue />
@@ -220,6 +246,13 @@ export function CreateCustomerDialog({ open, onOpenChange, createCustomer }) {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>خط العرض (Latitude)</FormLabel>
+            {/* العنوان (GeoPoint) */}
+            <FormField
+              control={form.control}
+              name="address.lat"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Latitude</FormLabel>
                   <Input type="number" step="any" {...field} />
                   <FormMessage />
                 </FormItem>
@@ -233,6 +266,12 @@ export function CreateCustomerDialog({ open, onOpenChange, createCustomer }) {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>خط الطول (Longitude)</FormLabel>
+            <FormField
+              control={form.control}
+              name="address.lng"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Longitude</FormLabel>
                   <Input type="number" step="any" {...field} />
                   <FormMessage />
                 </FormItem>
