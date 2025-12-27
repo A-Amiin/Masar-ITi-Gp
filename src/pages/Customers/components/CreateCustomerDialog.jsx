@@ -246,6 +246,9 @@ export function CreateCustomerDialog({ open, onOpenChange, createCustomer }) {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>خط العرض (Latitude)</FormLabel>
+                </FormItem>
+              )}
+            />
             {/* العنوان (GeoPoint) */}
             <FormField
               control={form.control}
@@ -266,6 +269,11 @@ export function CreateCustomerDialog({ open, onOpenChange, createCustomer }) {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>خط الطول (Longitude)</FormLabel>
+                </FormItem>
+              )}
+            />
+
+            {/* خط الطول (GeoPoint) */}
             <FormField
               control={form.control}
               name="address.lng"

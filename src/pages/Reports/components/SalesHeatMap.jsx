@@ -8,7 +8,7 @@ const heatPoints = [
   [30.0444, 31.2357, 0.9], 
   [30.0333, 31.2333, 0.8], 
   [31.2001, 29.9187, 0.7], 
-  [30.7865, 31.0004, 0.6]
+  [30.7865, 31.0004, 0.6],
   [31.0409, 31.3785, 0.65], 
   [27.1809, 31.1837, 0.5],
   [26.5591, 31.6957, 0.4],
@@ -17,9 +17,16 @@ const heatPoints = [
 
 const HeatLayer = () => {
   const map = useMap();
+  const safeHeatPoints = heatPoints.filter(
+  p =>
+    Array.isArray(p) &&
+    p.length >= 2 &&
+    !isNaN(p[0]) &&
+    !isNaN(p[1])
+);
 
   useEffect(() => {
-    const heatLayer = L.heatLayer(heatPoints, {
+    const heatLayer = L.heatLayer(safeHeatPoints, {
       radius: 40,
       blur: 25,
       maxZoom: 7,
