@@ -1,7 +1,3 @@
-const Chat = () => {
-  return (
-    <div>Chat</div>
-  )
+export default function Chat() {
+  return <div>Chat Page Placeholder</div>;
 }
-
-export default Chat
