@@ -47,7 +47,7 @@ export function DataTable({
           size="sm"
           onClick={() => handleCreate()}
         >
-         إضافه عميل جديد
+         إضافه عنصر جديد
         </Button>
 
       </div>
