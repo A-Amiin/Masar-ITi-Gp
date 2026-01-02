@@ -1,20 +1,8 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
-import {
-  Form,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Form, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { customerSchema } from "@/schemas/customer.schema"
@@ -135,6 +123,27 @@ export function CreateCustomerDialog({ open, onOpenChange, createCustomer }) {
                 <FormItem>
                   <FormLabel>نوع النشاط التجاري</FormLabel>
                   <Input {...field} />
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            {/* نوع النشاط التجاري */}
+            <FormField
+              control={form.control}
+              name="activityType"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>نوع النشاط التجاري</FormLabel>
+                  <Select onValueChange={field.onChange} value={field.value}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="اختر نوع النشاط التجاري" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="جملة">جملة</SelectItem>
+                      <SelectItem value="قطاعي">قطاعي</SelectItem>
+                      <SelectItem value="جملة الجملة">جملة الجملة</SelectItem>
+                    </SelectContent>
+                  </Select>
                   <FormMessage />
                 </FormItem>
               )}

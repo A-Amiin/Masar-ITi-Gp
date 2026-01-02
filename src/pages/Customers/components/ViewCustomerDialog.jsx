@@ -57,6 +57,7 @@ const ViewCustomerDialog = ({ open, onOpenChange, customer }) => {
           <Info label="المنطقة" value={customer.area} />
           <Info label="تاريخ آخر زيارة" value={customer.lastVisit} />
           <Info label="عدد الزيارات" value={customer.visitsCount} />
+          <Info label="نوع النشاط التجاري" value={customer.activityType} />
           <Info
             label="إجمالي الإنفاق"
             value={`${customer.totalSpent} جنيه`}
