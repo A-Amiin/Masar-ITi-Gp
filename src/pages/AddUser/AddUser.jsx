@@ -49,7 +49,7 @@ const AddUser = () => {
 
   if (loading) return <p>جاري التحميل...</p>
   if (error) return <p>حصل خطأ</p>
-
+  console.log(error)
   return (
     <div className="space-y-4">
       <h1 className="text-xl font-bold">قائمة المستخدمين</h1>

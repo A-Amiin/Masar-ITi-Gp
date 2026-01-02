@@ -27,7 +27,7 @@ export const useCrudService = (collcetionName) => {
     setError(null)
     try {
       await addItem(data)
-      await fetchData()
+      await useGetAll()
     } catch (err) {
       console.error(err)
       setError(err)
@@ -41,7 +41,7 @@ export const useCrudService = (collcetionName) => {
     setError(null)
     try {
       await updateItem(id, data)
-      await fetchData()
+      await useGetAll()
     } catch (err) {
       console.error(err)
       setError(err)
@@ -69,7 +69,7 @@ export const useCrudService = (collcetionName) => {
     setError(null)
     try {
       await deleteItem(id)
-      await fetchData()
+      await useGetAll()
     } catch (err) {
       console.error(err)
       setError(err)
