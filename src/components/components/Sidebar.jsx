@@ -1,5 +1,5 @@
 import { Link, useLocation, useNavigate } from "react-router-dom"
-import { LayoutGrid, Users, User, MapPin, Box, ShoppingCart, FileText, MessageSquare, Settings, LogOut, ChevronLeft } from "lucide-react"
+import { LayoutGrid, Users, User, MapPin, Box, ShoppingCart, FileText, MessageSquare, Settings, LogOut, ChevronLeft, UserPlus } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { useState } from "react"
@@ -8,6 +8,7 @@ import useAuthStore from "@/store/authStore"
 
 const menuItems = [
   { label: "لوحة التحكم", icon: LayoutGrid, route: "/dashboard" },
+  { label: "إضافة مستخدم", icon: UserPlus, route: "/add-user" },
   { label: "المندوبين", icon: Users, route: "/agents" },
   { label: "العملاء", icon: User, route: "/customers" },
   { label: "توزيع المهام", icon: MapPin, route: "/tasks" },

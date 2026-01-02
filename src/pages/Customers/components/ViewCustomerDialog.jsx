@@ -1,10 +1,7 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
-import { MapPin } from "lucide-react"
 
 const ViewCustomerDialog = ({ open, onOpenChange, customer }) => {
-
-  console.log(customer)
   if (!open || !customer) return null
 
   const avg =
@@ -28,10 +25,10 @@ const ViewCustomerDialog = ({ open, onOpenChange, customer }) => {
         "
       >
         <DialogHeader className="space-y-1">
-          <DialogTitle className="text-right text-zinc-900 dark:text-zinc-100">
+          <DialogTitle className="text-right">
             تفاصيل العميل
           </DialogTitle>
-          <p className="text-sm text-muted-foreground text-right dark:text-zinc-400">
+          <p className="text-sm text-muted-foreground text-right">
             عرض جميع معلومات العميل
           </p>
         </DialogHeader>
@@ -43,21 +40,24 @@ const ViewCustomerDialog = ({ open, onOpenChange, customer }) => {
           </div>
 
           <div className="flex-1 text-right">
-            <p className="font-semibold">{customer.name}</p>
-            <div className="flex items-center gap-1 text-sm text-muted-foreground justify-end dark:text-zinc-400">
-              <MapPin className="w-4 h-4" />
-              {customer.locationEn}
-            </div>
+            <p className="font-semibold">
+              {customer.nameAr}
+            </p>
+            <p className="text-sm text-muted-foreground">
+              {customer.name}
+            </p>
           </div>
         </div>
 
         {/* Info Grid */}
         <div className="grid grid-cols-2 gap-y-4 gap-x-2 text-sm py-4">
           <Info label="رقم الهاتف" value={customer.phone} />
-          <Info label="نوع النشاط" value={customer.activity} />
           <Info label="نوع العميل" value={customer.type} />
+          <Info label="نوع النشاط" value={customer.activity} />
+          <Info label="المنطقة" value={customer.area} />
           <Info label="تاريخ آخر زيارة" value={customer.lastVisit} />
           <Info label="عدد الزيارات" value={customer.visitsCount} />
+          <Info label="نوع النشاط التجاري" value={customer.activityType} />
           <Info
             label="إجمالي الإنفاق"
             value={`${customer.totalSpent} جنيه`}
@@ -68,12 +68,12 @@ const ViewCustomerDialog = ({ open, onOpenChange, customer }) => {
         {/* Average */}
         <div className="rounded-lg bg-yellow-100 dark:bg-yellow-900/30 p-4 text-right space-y-1">
           <p className="text-xl font-bold text-blue-700 dark:text-blue-400">
-            {avg} جنيه
+            {avg.toFixed(2)} جنيه
           </p>
-          <p className="text-sm text-muted-foreground dark:text-zinc-400">
+          <p className="text-sm text-muted-foreground">
             متوسط الشراء
           </p>
-          <p className="text-xs text-muted-foreground dark:text-zinc-500">
+          <p className="text-xs text-muted-foreground">
             محسوب من إجمالي الإنفاق ({customer.totalSpent} جنيه)
             ÷ عدد الزيارات ({customer.visitsCount})
           </p>
@@ -81,10 +81,7 @@ const ViewCustomerDialog = ({ open, onOpenChange, customer }) => {
 
         {/* Footer */}
         <div className="flex justify-end pt-4">
-          <Button
-            variant="secondary"
-            onClick={() => onOpenChange(false)}
-          >
+          <Button variant="secondary" onClick={() => onOpenChange(false)}>
             إغلاق
           </Button>
         </div>
@@ -98,7 +95,7 @@ export default ViewCustomerDialog
 /* ---------- Helper ---------- */
 const Info = ({ label, value, highlight }) => (
   <div className="text-right">
-    <p className="text-muted-foreground dark:text-zinc-400">
+    <p className="text-muted-foreground text-sm">
       {label}
     </p>
     <p
@@ -108,7 +105,7 @@ const Info = ({ label, value, highlight }) => (
           : "font-medium"
       }
     >
-      {value}
+      {value ?? "-"}
     </p>
   </div>
 )
