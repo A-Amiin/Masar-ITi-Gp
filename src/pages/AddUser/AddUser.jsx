@@ -1,13 +1,13 @@
 import { useState } from "react"
+import { useCrudService } from "@/hooks/useCrudService"
 import { DataTable } from "@/components/ui/data-table"
 import { getColumns } from "./components/columns"
-import { CreateCustomerDialog } from "./components/CreateCustomerDialog"
-import ViewCustomerDialog from "./components/ViewCustomerDialog"
-import { useCrudService } from "@/hooks/useCrudService"
+import { CreateUserDialog } from "./components/CreateUserDialog"
+import ViewCustomerDialog from "./components/ViewUserDialog"
 
-const Customers = () => {
-  
-  const { Items: customers, loading, error, useGetAll, useCreate, useEdit, useDelete, useGetById, selectedItem: selectedCustomer, closeView } = useCrudService("customers")
+const AddUser = () => {
+  const { Items: users, loading, error, useGetAll, useCreate, useEdit, useDelete, useGetById, selectedItem: selectedUser, closeView } = useCrudService("users")
+
   const [open, setOpen] = useState(false)
 
   const columns = getColumns(
@@ -25,31 +25,31 @@ const Customers = () => {
 
   return (
     <div className="space-y-4">
-      <h1 className="text-xl font-bold">قائمة العملاء</h1>
+      <h1 className="text-xl font-bold">قائمة المستخدمين</h1>
 
       <div className="border rounded-md bg-white dark:bg-background p-4">
         <DataTable
           columns={columns}
-          data={customers}
+          data={users}
           handleCreate={() => setOpen(true)}
         />
       </div>
 
-      <CreateCustomerDialog
+      <CreateUserDialog
         open={open}
         onOpenChange={setOpen}
         createCustomer={handleCreate}
       />
 
       <ViewCustomerDialog
-        open={!!selectedCustomer}
+        open={!!selectedUser}
         onOpenChange={(open) => {
           if (!open) closeView()
         }}
-        customer={selectedCustomer}
+        customer={selectedUser}
       />
     </div>
   )
 }
 
-export default Customers
+export default AddUser

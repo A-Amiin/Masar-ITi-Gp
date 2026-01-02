@@ -4,6 +4,7 @@ import ProtectedRoute from "@/routes/ProtectedRoute";
 import Landing from "@/pages/Landing/Landing";
 import Login from "@/pages/Login/Login";
 import Dashboard from "@/pages/Dashboard/Dashboard";
+import AddUser from "@/pages/AddUser/AddUser";
 import Agents from "@/pages/Agents/Agents";
 import Customers from "@/pages/Customers/Customers";
 import Tasks from "@/pages/Tasks/Tasks";
@@ -27,6 +28,7 @@ const AppRouter = () => {
         <Route element={<ProtectedRoute />}>
           <Route element={<DashboardLayout />}>
             <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/add-user" element={<AddUser />} />
             <Route path="/agents" element={<Agents />} />
             <Route path="/customers" element={<Customers />} />
             <Route path="/tasks" element={<Tasks />} />

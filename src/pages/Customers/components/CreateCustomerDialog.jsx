@@ -6,8 +6,6 @@ import { Form, FormField, FormItem, FormLabel, FormMessage } from "@/components/
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { customerSchema } from "@/schemas/customer.schema"
-import { GeoPoint } from "firebase/firestore"
-import { useCustomers } from "@/hooks/useCustomers"
 
 export function CreateCustomerDialog({ open, onOpenChange, createCustomer }) {
   
@@ -19,20 +17,20 @@ export function CreateCustomerDialog({ open, onOpenChange, createCustomer }) {
       classification: "B",
       lat: 30.0444, // Cairo latitude
       lng: 31.2357, // Cairo longitude
-      address: {
-        lat: "",
-        lng: "",
-      },
+      // address: {
+      //   lat: "",
+      //   lng: "",
+      // },
     },
   })
   
   const onSubmit = (data) => {
     const payload = {
       ...data,
-      address: new GeoPoint(
-        Number(data.address.lat),
-        Number(data.address.lng)
-      ),
+      // address: new GeoPoint(
+      //   Number(data.address.lat),
+      //   Number(data.address.lng)
+      // ),
     }
     
     createCustomer(payload)
