@@ -4,7 +4,7 @@ import { collection, onSnapshot, query, orderBy } from "firebase/firestore";
 const customersRef = collection(db, "customers");
 
 export const subscribeToCustomers = (setCustomers) => {
-const q = query(customersRef);
+  const q = query(customersRef, orderBy("timestamp", "desc"));
 
   return onSnapshot(q, (snapshot) => {
     const data = snapshot.docs.map((doc) => ({
