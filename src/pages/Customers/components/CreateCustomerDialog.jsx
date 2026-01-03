@@ -17,7 +17,7 @@ export function CreateCustomerDialog({ open, onOpenChange, createCustomer }) {
       .then((res) => res.json())
       .then((data) => {
         const names = data.features.map(
-          (feature) => feature.properties.SHYK_ENAME
+          (feature) => feature.properties.SHYK_ANA_1
         )
         setAreas(names)
       })
