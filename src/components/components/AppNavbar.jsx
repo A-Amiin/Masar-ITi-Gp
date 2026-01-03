@@ -8,6 +8,7 @@ const AppNavbar = () => {
   const { user, loading } = useAdminUser()
   const { theme, toggleTheme } = useInitTheme();
   if (loading) return null
+  console.log("navvvv"+ user)
 
   return (
     <header className="
