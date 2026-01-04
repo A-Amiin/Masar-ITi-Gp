@@ -12,6 +12,7 @@ import Inventory from "@/pages/Inventory/Inventory";
 import Orders from "@/pages/Orders/Orders";
 import Reports from "@/pages/Reports/Reports";
 import Chat from "@/pages/Chat/Chat";
+import Issues from "@/pages/Issues/Issues";
 import Settings from "@/pages/Settings/Settings";
 import NotFound from "@/pages/NotFound/NotFound";
 
@@ -36,6 +37,7 @@ const AppRouter = () => {
             <Route path="/orders" element={<Orders />} />
             <Route path="/reports" element={<Reports />} />
             <Route path="/chat" element={<Chat />} />
+            <Route path="/issues" element={<Issues />} />
             <Route path="/settings" element={<Settings />} />
           </Route>
         </Route>

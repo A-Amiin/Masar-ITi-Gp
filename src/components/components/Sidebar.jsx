@@ -1,5 +1,5 @@
 import { Link, useLocation, useNavigate } from "react-router-dom"
-import { LayoutGrid, Users, User, MapPin, Box, ShoppingCart, FileText, MessageSquare, Settings, LogOut, ChevronLeft, UserPlus } from "lucide-react"
+import { LayoutGrid, Users, User, MapPin, Box, ShoppingCart, FileText, MessageSquare, Settings, LogOut, ChevronLeft, UserPlus, Inbox } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { useState } from "react"
@@ -16,6 +16,7 @@ const menuItems = [
   { label: "الطلبات", icon: ShoppingCart, route: "/orders" },
   { label: "التقارير", icon: FileText, route: "/reports" },
   { label: "الدردشة", icon: MessageSquare, route: "/chat" },
+  { label: "المشاكل", icon: Inbox, route: "/issues" },
   { label: "الإعدادات", icon: Settings, route: "/settings" },
 ]
 
