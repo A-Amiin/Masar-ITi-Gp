@@ -7,6 +7,7 @@ import { Inbox } from "lucide-react"
 const PopOver = () => {
     const navigate = useNavigate();
     const { notifications } = useAdminNotifications();
+    console.log(notifications)
     return (
         <Popover>
             <PopoverTrigger asChild>
@@ -39,23 +40,13 @@ const PopOver = () => {
                             <button
                                 key={notif.id}
                                 onClick={async () => {
-                                    await updateDoc(
-                                        doc(db, "admin_notifications", notif.id),
-                                        { isRead: true }
-                                    );
-                                    navigate(`/issues/${notif.refId}`);
+                                    await updateDoc(doc(db, "contact_us", notif.id), { isRead: true });
+                                    navigate(`/issues/${notif.id}`);
                                 }}
-                                className="
-                      text-left p-2 rounded-md
-                      hover:bg-muted transition
-                    "
+                                className="text-left p-2 rounded-md hover:bg-muted transition"
                             >
-                                <p className="text-sm font-medium">
-                                    {notif.title}
-                                </p>
-                                <p className="text-xs text-muted-foreground">
-                                    {notif.description}
-                                </p>
+                                <p className="text-sm font-medium">رسالة جديدة من {notif.name}</p>
+                                <p className="text-xs text-muted-foreground">{notif.message}</p>
                             </button>
                         ))}
                     </div>

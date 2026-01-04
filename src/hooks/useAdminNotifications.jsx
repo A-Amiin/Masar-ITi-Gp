@@ -8,7 +8,7 @@ export const useAdminNotifications = () => {
 
   useEffect(() => {
     const q = query(
-      collection(db, "admin_notifications"),
+      collection(db, "contact_us"),
       where("isRead", "==", false),
       orderBy("createdAt", "desc")
     );

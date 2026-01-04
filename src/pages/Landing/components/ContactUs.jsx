@@ -39,6 +39,7 @@ export default function ContactUs() {
         ...values,
         createdAt: serverTimestamp(),
         status: "new",
+        isRead: false,
       });
 
       alert("تم إرسال الرسالة بنجاح!");
