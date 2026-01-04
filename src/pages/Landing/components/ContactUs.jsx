@@ -1,12 +1,14 @@
-import * as z from "zod"
-import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
-import {Form,FormControl,FormField,FormItem,FormLabel,FormMessage } from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Mail, Phone, MapPin } from "lucide-react"
+import * as z from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Mail, Phone, MapPin } from "lucide-react";
+import { serverTimestamp } from "firebase/firestore";
+import { useCrudService } from "@/hooks/useCrudService";
 
 // Validation Schema
 const contactFormSchema = z.object({
@@ -14,7 +16,7 @@ const contactFormSchema = z.object({
   email: z.string().email("البريد الإلكتروني غير صالح"),
   phone: z.string().min(10, "رقم الهاتف غير صالح"),
   message: z.string().min(5, "الرسالة يجب أن تحتوي على 5 أحرف على الأقل"),
-})
+});
 
 export default function ContactUs() {
   const form = useForm({
@@ -24,18 +26,33 @@ export default function ContactUs() {
       email: "",
       phone: "",
       message: "",
-    }
-  })
+    },
+  });
 
-  const onSubmit = (values) => {
-    console.log(values)
-    alert("تم إرسال الرسالة بنجاح!")
-    form.reset()
-  }
+  // Firestore CRUD for contact_us
+  const { useCreate } = useCrudService("contact_us");
+
+  const onSubmit = async (values) => {
+    try {
+      // Write to Firestore
+      await useCreate({
+        ...values,
+        createdAt: serverTimestamp(),
+        status: "new",
+      });
+
+      alert("تم إرسال الرسالة بنجاح!");
+      form.reset();
+    } catch (err) {
+      console.error(err);
+      alert("حدث خطأ أثناء إرسال الرسالة. حاول مرة أخرى.");
+    }
+  };
 
   return (
     <section id="contact" dir="rtl" className="py-16 bg-white dark:bg-background">
       <div className="container max-w-4xl mx-auto space-y-10">
+        {/* Title */}
         <div className="text-center space-y-2">
           <h2 className="text-3xl font-bold text-brand-primary">تواصل معنا</h2>
           <p className="text-brand-gray">
@@ -43,6 +60,7 @@ export default function ContactUs() {
           </p>
         </div>
 
+        {/* Form Card */}
         <Card className="border-0 w-full">
           <CardContent className="p-6 space-y-4">
             <Form {...form}>
@@ -134,7 +152,7 @@ export default function ContactUs() {
           </CardContent>
         </Card>
 
-        {/* Contact Info */}
+        {/* Contact Info Card */}
         <Card
           className="
             container mx-auto rounded-2xl border
@@ -162,7 +180,7 @@ export default function ContactUs() {
         </Card>
       </div>
     </section>
-  )
+  );
 }
 
 function InfoItem({ icon, title, value }) {
@@ -174,5 +192,5 @@ function InfoItem({ icon, title, value }) {
         <p className="font-medium">{value}</p>
       </div>
     </div>
-  )
+  );
 }
