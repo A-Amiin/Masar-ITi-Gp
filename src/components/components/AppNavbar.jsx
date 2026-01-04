@@ -3,12 +3,12 @@ import useInitTheme from "@/hooks/useInitTheme"
 import ThemeToggle from "./ThemeToggle"
 import { Link } from "react-router-dom"
 import UserAvatarDialog from "@/components/components/UserAvatarDialog"
+import { Inbox } from "lucide-react"
 
 const AppNavbar = () => {
   const { user, loading } = useAdminUser()
   const { theme, toggleTheme } = useInitTheme();
   if (loading) return null
-  console.log("navvvv"+ user)
 
   return (
     <header className="
@@ -28,6 +28,10 @@ const AppNavbar = () => {
       {/* Right */}
       {user && (
         <div className="flex items-center gap-4">
+          {/* Issues */}
+          <Link to="/issues">
+            <Inbox className="w-5 h-5" />
+          </Link>
           {/* Dark mode switch */}
             <ThemeToggle theme={theme} toggleTheme={toggleTheme}/>
           {/* User Avatar */}
