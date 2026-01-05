@@ -4,12 +4,13 @@ import { useAdminUser } from "@/hooks/useAdminUser"
 import PopOver from "@/pages/Issues/components/PopOver"
 import UserAvatarDialog from "@/components/components/UserAvatarDialog"
 import ThemeToggle from "./ThemeToggle"
+import { Briefcase } from "lucide-react"
 
 const AppNavbar = () => {
   const { user, loading } = useAdminUser()
   const { theme, toggleTheme } = useInitTheme();
   if (loading) return null
-  
+
   return (
     <header className="
       container-2xl mx-auto px-4
@@ -21,17 +22,24 @@ const AppNavbar = () => {
       {/* Left */}
       <div className="flex items-center gap-3">
         <Link to="/dashboard" className="flex items-center gap-2">
-        <img src="/masar-logo.png" alt="logo" className="h-20" />
+          <img src="/masar-logo.png" alt="logo" className="h-20" />
         </Link>
       </div>
 
       {/* Right */}
       {user && (
         <div className="flex items-center gap-4">
+
+          {/* Premium Users */}
+
+          <Briefcase size={20} />
+
           {/* Issues */}
           <PopOver />
+
           {/* Dark mode switch */}
-            <ThemeToggle theme={theme} toggleTheme={toggleTheme}/>
+          <ThemeToggle theme={theme} toggleTheme={toggleTheme} />
+
           {/* User Avatar */}
           <UserAvatarDialog user={user} />
         </div>
