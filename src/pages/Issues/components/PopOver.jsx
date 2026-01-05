@@ -44,7 +44,7 @@ const PopOver = () => {
                                 key={notif.id}
                                 onClick={async () => {
                                     await updateDoc(doc(db, "contact_us", notif.id), { isRead: true });
-                                    navigate(`/issues/${notif.id}`);
+                                    navigate(`/issues`);
                                 }}
                                 className="text-left p-2 rounded-md hover:bg-muted transition"
                             >

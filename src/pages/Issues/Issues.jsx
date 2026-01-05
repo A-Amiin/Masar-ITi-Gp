@@ -1,24 +1,44 @@
 import { useCrudService } from "@/hooks/useCrudService"
 import { DataTable } from "@/components/ui/data-table"
 import { getColumns } from "./components/columns"
-import ViewUserDialog from "./components/ViewIssueDialog" 
+import ViewUserDialog from "./components/ViewIssueDialog"
 
 const Issues = () => {
   const {
     Items: issues,
     loading,
     error,
+    setItems,
+    useEdit,
     useDelete,
     useGetById,
     selectedItem: selectedIssue,
     closeView,
   } = useCrudService("contact_us")
 
+  const handleMarkRead = async (id) => {
+    // 👇 optimistic update
+    setItems(prev =>
+      prev.map(item =>
+        item.id === id
+          ? { ...item, isRead: true, status: "read" }
+          : item
+      )
+    )
+
+    // 👇 Firestore update
+    await useEdit(id, {
+      isRead: true,
+      status: "read",
+    })
+  }
+
   const columns = getColumns(
-    (row) => useGetById(row.id),
-    (id) => useDelete(id)
+    (id) => useGetById(id),
+    (id) => useDelete(id),
+    handleMarkRead
   )
-  console.log(issues)
+
   if (loading) return <p>جاري التحميل...</p>
   if (error) return <p>حدث خطأ أثناء جلب البيانات</p>
 

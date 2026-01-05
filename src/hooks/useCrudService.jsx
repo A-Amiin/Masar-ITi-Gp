@@ -41,7 +41,13 @@ export const useCrudService = (collcetionName) => {
     setError(null)
     try {
       await updateItem(id, data)
+
+      const updatedItem = await getItemById(id)
+
+      setSelectedItem(updatedItem)
       await useGetAll()
+
+      return updatedItem
     } catch (err) {
       console.error(err)
       setError(err)
@@ -86,5 +92,5 @@ export const useCrudService = (collcetionName) => {
     useGetAll()
   }, [])
 
-  return { Items, loading, error, useGetAll, useCreate, useEdit, useDelete, useGetById, selectedItem, closeView }
+  return { Items, loading, error, setItems, useGetAll, useCreate, useEdit, useDelete, useGetById, selectedItem, closeView }
 }
