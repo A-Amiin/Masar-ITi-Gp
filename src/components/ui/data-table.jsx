@@ -53,7 +53,7 @@ export function DataTable({
       </div>
 
       {/* 📋 Table */}
-      <div className="rounded-md border">
+      <div className="rounded-md border bg-white dark:bg-gray-900 overflow-x-auto">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
