@@ -16,11 +16,14 @@ const PopOver = () => {
 
                     {notifications.length > 0 && (
                         <span className="
-                    absolute -top-1 -right-1
-                    w-2 h-2
+                    absolute -top-2 -right-3
+                    w-4 h-4 flex items-center justify-center
+                    text-xs text-white
                     bg-red-500
                     rounded-full
-                  " />
+                  " >
+                    {notifications.length}
+                  </span>
                     )}
                 </button>
             </PopoverTrigger>
