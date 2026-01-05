@@ -1,7 +1,7 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 
-const ViewCustomerDialog = ({ open, onOpenChange, customer }) => {
+const ViewIssueDialog = ({ open, onOpenChange, customer }) => {
   if (!open || !customer) return null
 
   const avg =
@@ -90,7 +90,7 @@ const ViewCustomerDialog = ({ open, onOpenChange, customer }) => {
   )
 }
 
-export default ViewCustomerDialog
+export default ViewIssueDialog
 
 /* ---------- Helper ---------- */
 const Info = ({ label, value, highlight }) => (

@@ -1,14 +1,15 @@
-import { useAdminUser } from "@/hooks/useAdminUser"
-import useInitTheme from "@/hooks/useInitTheme"
-import ThemeToggle from "./ThemeToggle"
 import { Link } from "react-router-dom"
+import useInitTheme from "@/hooks/useInitTheme"
+import { useAdminUser } from "@/hooks/useAdminUser"
+import PopOver from "@/pages/Issues/components/PopOver"
 import UserAvatarDialog from "@/components/components/UserAvatarDialog"
+import ThemeToggle from "./ThemeToggle"
 
 const AppNavbar = () => {
   const { user, loading } = useAdminUser()
   const { theme, toggleTheme } = useInitTheme();
   if (loading) return null
-
+  
   return (
     <header className="
       container-2xl mx-auto px-4
@@ -27,6 +28,8 @@ const AppNavbar = () => {
       {/* Right */}
       {user && (
         <div className="flex items-center gap-4">
+          {/* Issues */}
+          <PopOver />
           {/* Dark mode switch */}
             <ThemeToggle theme={theme} toggleTheme={toggleTheme}/>
           {/* User Avatar */}

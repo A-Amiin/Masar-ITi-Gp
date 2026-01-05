@@ -1,93 +1,74 @@
-import { useEffect, useRef } from "react";
+import React from "react";
 import {
   MapContainer,
   TileLayer,
   Marker,
-  Popup,
-  useMap,
+  Polyline,
+  GeoJSON,
 } from "react-leaflet";
+import "leaflet/dist/leaflet.css";
+
 import L from "leaflet";
-import "leaflet-routing-machine";
-import "leaflet-routing-machine/dist/leaflet-routing-machine.css";
+delete L.Icon.Default.prototype._getIconUrl;
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl:
+    "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png",
+  iconUrl:
+    "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png",
+  shadowUrl:
+    "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
+});
 
+const MapView = ({
+  customers = [],
+  routePoints = [],
+  areasGeoJson,
+  selectedAreaId,
+}) => {
+  const areaStyle = (feature) => ({
+    color:
+      String(feature.id) === String(selectedAreaId)
+        ? "#2563eb"
+        : "#16a34a",
+    weight: 2,
+    fillOpacity: 0.35,
+  });
 
-const RouteController = ({ customers, optimizeRoute }) => {
-  const map = useMap();
-  const routingRef = useRef(null);
-
-  useEffect(() => {
-    
-    if (routingRef.current) {
-      map.removeControl(routingRef.current);
-      routingRef.current = null;
-    }
-
-    if (!optimizeRoute) return;
-
-    const waypoints = customers
-      .map((c) => {
-        const lat = parseFloat(c.lat);
-        const lng = parseFloat(c.lng);
-        if (isNaN(lat) || isNaN(lng)) return null;
-        return L.latLng(lat, lng);
-      })
-      .filter(Boolean);
-
-    if (waypoints.length < 2) return;
-
-    routingRef.current = L.Routing.control({
-      waypoints,
-      addWaypoints: false,
-      draggableWaypoints: false,
-      routeWhileDragging: false,
-      fitSelectedRoutes: true,
-      show: false,
-      lineOptions: {
-        styles: [{ color: "#2563eb", weight: 5 }],
-      },
-    }).addTo(map);
-  }, [optimizeRoute, customers, map]);
-
-  return null;
-};
-
-
-const MapView = ({ customers = [], optimizeRoute }) => {
   return (
     <MapContainer
-      center={[30.0444, 31.2357]}
-      zoom={11}
+      center={
+        customers[0]
+          ? [customers[0].lat, customers[0].lng]
+          : [30.06, 31.33]
+      }
+      zoom={13}
       style={{ height: "100%", width: "100%" }}
     >
-      <TileLayer
-        attribution="© OpenStreetMap"
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-      />
+      <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
 
+      {/* مناطق GeoJSON */}
+      {areasGeoJson && (
+        <GeoJSON
+          data={areasGeoJson}
+          style={areaStyle}
+          onEachFeature={(feature, layer) => {
+            layer.bindTooltip(
+              feature.properties?.SHYK_ANA_1,
+              { sticky: true }
+            );
+          }}
+        />
+      )}
 
-      {customers.map((c) => {
-        const lat = parseFloat(c.lat);
-        const lng = parseFloat(c.lng);
-        if (isNaN(lat) || isNaN(lng)) return null;
+      {/* العملاء */}
+      {customers.map((c) => (
+        <Marker key={c.id} position={[c.lat, c.lng]} />
+      ))}
 
-        return (
-          <Marker key={c.id} position={[lat, lng]}>
-            <Popup>
-              <p className="font-semibold">{c.name}</p>
-              <p>{c.activity}</p>
-              <p className="text-sm text-muted-foreground">
-                {c.classification}
-              </p>
-            </Popup>
-          </Marker>
-        );
-      })}
-
-  
-      <RouteController
-        customers={customers}
-        optimizeRoute={optimizeRoute}
-      />
+      {/* المسار */}
+      {routePoints.length > 1 && (
+        <Polyline positions={routePoints} weight={5} />
+      )}
     </MapContainer>
   );
 };

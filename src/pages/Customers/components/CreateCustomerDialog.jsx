@@ -6,51 +6,46 @@ import { Form, FormField, FormItem, FormLabel, FormMessage } from "@/components/
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { customerSchema } from "@/schemas/customer.schema"
-import { GeoPoint } from "firebase/firestore"
-import { useCustomers } from "@/hooks/useCustomers"
+import { useEffect, useState } from "react"
 
 export function CreateCustomerDialog({ open, onOpenChange, createCustomer }) {
-  
+  const [areas, setAreas] = useState([])
+
+  // 🔹 تحميل المناطق من public
+  useEffect(() => {
+    fetch("/areas.json")
+      .then((res) => res.json())
+      .then((data) => {
+        const names = data.features.map(
+          (feature) => feature.properties.SHYK_ANA_1
+        )
+        setAreas(names)
+      })
+  }, [])
+
   const form = useForm({
     resolver: zodResolver(customerSchema),
     defaultValues: {
       visitsCount: 0,
       totalSpent: 0,
       classification: "B",
-      address: {
-        lat: "",
-        lng: "",
-      },
+      type: "",
+      activity: "",
+      area: "",
     },
   })
-  
+
   const onSubmit = (data) => {
-    const payload = {
-      ...data,
-      address: new GeoPoint(
-        Number(data.address.lat),
-        Number(data.address.lng)
-      ),
-    }
-    
-    createCustomer(payload)
+    createCustomer(data)
     onOpenChange(false)
     form.reset()
   }
-  
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent
-        className="
-          max-w-3xl
-          [&>button]:left-4
-          [&>button]:right-auto
-        "
-      >
+      <DialogContent className="max-w-3xl [&>button]:left-4 [&>button]:right-auto">
         <DialogHeader>
-          <DialogTitle className="text-right">
-            إضافة عميل
-          </DialogTitle>
+          <DialogTitle className="text-right">إضافة عميل</DialogTitle>
         </DialogHeader>
 
         <Form {...form}>
@@ -98,32 +93,6 @@ export function CreateCustomerDialog({ open, onOpenChange, createCustomer }) {
               )}
             />
 
-            {/* الموقع عربي */}
-            <FormField
-              control={form.control}
-              name="locationAr"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>الموقع (عربي)</FormLabel>
-                  <Input {...field} />
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {/* الموقع إنجليزي */}
-            <FormField
-              control={form.control}
-              name="locationEn"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>الموقع (إنجليزي)</FormLabel>
-                  <Input {...field} />
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
             {/* نوع العميل */}
             <FormField
               control={form.control}
@@ -131,16 +100,14 @@ export function CreateCustomerDialog({ open, onOpenChange, createCustomer }) {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>نوع العميل</FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    value={field.value}
-                  >
+                  <Select onValueChange={field.onChange} value={field.value}>
                     <SelectTrigger>
                       <SelectValue placeholder="اختر النوع" />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="عميل جديد">عميل جديد</SelectItem>
                       <SelectItem value="عميل محتمل">عميل محتمل</SelectItem>
+                      <SelectItem value="عميل دائم">عميل دائم</SelectItem>
                     </SelectContent>
                   </Select>
                   <FormMessage />
@@ -148,24 +115,57 @@ export function CreateCustomerDialog({ open, onOpenChange, createCustomer }) {
               )}
             />
 
-            {/* النشاط */}
+            {/* النشاط (Input بدل Select) */}
             <FormField
               control={form.control}
               name="activity"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>نوع النشاط التجاري</FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    value={field.value}
-                  >
+                  <Input {...field} />
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            {/* نوع النشاط التجاري */}
+            <FormField
+              control={form.control}
+              name="activityType"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>نوع النشاط التجاري</FormLabel>
+                  <Select onValueChange={field.onChange} value={field.value}>
                     <SelectTrigger>
-                      <SelectValue placeholder="اختر النوع" />
+                      <SelectValue placeholder="اختر نوع النشاط التجاري" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="سوبر ماركت">سوبر ماركت</SelectItem>
-                      <SelectItem value="كافيه">كافيه</SelectItem>
-                      <SelectItem value="صيدلية">صيدلية</SelectItem>
+                      <SelectItem value="جملة">جملة</SelectItem>
+                      <SelectItem value="قطاعي">قطاعي</SelectItem>
+                      <SelectItem value="جملة الجملة">جملة الجملة</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {/* اختيار المنطقة */}
+            <FormField
+              control={form.control}
+              name="area"
+              render={({ field }) => (
+                <FormItem className="col-span-2">
+                  <FormLabel>اختيار المنطقة</FormLabel>
+                  <Select onValueChange={field.onChange} value={field.value}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="اختر المنطقة" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {areas.map((area, index) => (
+                        <SelectItem key={index} value={area}>
+                          {area}
+                        </SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
                   <FormMessage />
@@ -180,10 +180,7 @@ export function CreateCustomerDialog({ open, onOpenChange, createCustomer }) {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>التصنيف</FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    value={field.value}
-                  >
+                  <Select onValueChange={field.onChange} value={field.value}>
                     <SelectTrigger>
                       <SelectValue />
                     </SelectTrigger>
@@ -198,7 +195,7 @@ export function CreateCustomerDialog({ open, onOpenChange, createCustomer }) {
               )}
             />
 
-            {/* تاريخ الزيارة */}
+            {/* تاريخ آخر زيارة */}
             <FormField
               control={form.control}
               name="lastVisit"
@@ -230,45 +227,15 @@ export function CreateCustomerDialog({ open, onOpenChange, createCustomer }) {
               name="totalSpent"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>إجمالي الإنفاق (جنيه)</FormLabel>
+                  <FormLabel>إجمالي الإنفاق</FormLabel>
                   <Input type="number" {...field} />
                   <FormMessage />
                 </FormItem>
               )}
             />
 
-            {/* العنوان (GeoPoint) */}
-            <FormField
-              control={form.control}
-              name="address.lat"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Latitude</FormLabel>
-                  <Input type="number" step="any" {...field} />
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="address.lng"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Longitude</FormLabel>
-                  <Input type="number" step="any" {...field} />
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {/* Buttons */}
             <div className="col-span-2 flex justify-end gap-2 pt-4">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => onOpenChange(false)}
-              >
+              <Button variant="outline" type="button" onClick={() => onOpenChange(false)}>
                 إلغاء
               </Button>
               <Button type="submit">حفظ</Button>

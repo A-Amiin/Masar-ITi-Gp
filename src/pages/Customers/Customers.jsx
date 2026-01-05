@@ -1,22 +1,22 @@
 import { useState } from "react"
-import { useCustomers } from "@/hooks/useCustomers"
 import { DataTable } from "@/components/ui/data-table"
 import { getColumns } from "./components/columns"
 import { CreateCustomerDialog } from "./components/CreateCustomerDialog"
 import ViewCustomerDialog from "./components/ViewCustomerDialog"
+import { useCrudService } from "@/hooks/useCrudService"
 
 const Customers = () => {
-  const { customers, loading, error, selectedCustomer, removeCustomer, createCustomer, getCustomerByIdWrapper, closeCustomerView } = useCustomers()
-
+  
+  const { Items: customers, loading, error, useGetAll, useCreate, useEdit, useDelete, useGetById, selectedItem: selectedCustomer, closeView } = useCrudService("customers")
   const [open, setOpen] = useState(false)
 
   const columns = getColumns(
-    (row) => getCustomerByIdWrapper(row.id),
-    (id) => removeCustomer(id)
+    (row) => useGetById(row.id),
+    (id) => useDelete(id)
   )
 
   const handleCreate = async (data) => {
-    await createCustomer(data)
+    await useCreate(data)
     setOpen(false)
   }
 
@@ -44,7 +44,7 @@ const Customers = () => {
       <ViewCustomerDialog
         open={!!selectedCustomer}
         onOpenChange={(open) => {
-          if (!open) closeCustomerView()
+          if (!open) closeView()
         }}
         customer={selectedCustomer}
       />
