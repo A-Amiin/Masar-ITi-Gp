@@ -7,6 +7,8 @@ import { Button } from "@/components/ui/button"
 import {Select,SelectContent,SelectItem,SelectTrigger,SelectValue } from "@/components/ui/select"
 import {Form,FormControl,FormField,FormItem,FormLabel,FormMessage } from "@/components/ui/form"
 import { Send } from "lucide-react"
+import { addDoc, collection, serverTimestamp } from "firebase/firestore"
+import { db } from "@/lib/firebase"
 
 // ================= Schema =================
 const joinSchema = z.object({
@@ -28,10 +30,25 @@ const JoinUs = () => {
     },
   })
 
-  const onSubmit = (values) => {
-    console.log("Form Data ", values)
+  const onSubmit = async (values) => {
+  try {
+    await addDoc(collection(db, "join_us"), {
+      name: values.name,
+      phone: values.phone,
+      city: values.city,
+      isRead: false,
+      status: "new",
+      createdAt: serverTimestamp(),
+    })
+
     form.reset()
+    alert("تم إرسال الطلب بنجاح ")
+  } catch (error) {
+    alert("خطأ أثناء الإرسال ")
+    console.error("Error adding document: ", error)
   }
+}
+
 
   return (
     <section id="be-rep" dir="rtl" className="py-20 px-6 bg-white dark:bg-background">

@@ -2,9 +2,9 @@ import { Link } from "react-router-dom"
 import useInitTheme from "@/hooks/useInitTheme"
 import { useAdminUser } from "@/hooks/useAdminUser"
 import PopOver from "@/pages/Issues/components/PopOver"
+import PopOverJoinUs from "@/pages/JoinUs/components/PopOverJoinUs"
 import UserAvatarDialog from "@/components/components/UserAvatarDialog"
 import ThemeToggle from "./ThemeToggle"
-import { Briefcase } from "lucide-react"
 
 const AppNavbar = () => {
   const { user, loading } = useAdminUser()
@@ -32,7 +32,7 @@ const AppNavbar = () => {
 
           {/* Premium Users */}
 
-          <Briefcase size={20} />
+          <PopOverJoinUs />
 
           {/* Issues */}
           <PopOver />

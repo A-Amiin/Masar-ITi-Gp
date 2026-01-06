@@ -1,30 +1,36 @@
-import { useEffect, useState } from "react";
-import { db } from "@/lib/firebase";
-import { collection, onSnapshot, orderBy, query, where } from "firebase/firestore";
+import { useEffect, useState } from "react"
+import { db } from "@/lib/firebase"
+import { collection, onSnapshot, orderBy, query, where } from "firebase/firestore"
 
-export const useAdminNotifications = () => {
-  const [notifications, setNotifications] = useState([]);
-  const [loading, setLoading] = useState(true);
+export const useUnreadNotifications = (collectionName) => {
+  const [items, setItems] = useState([])
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
+    if (!collectionName) return
+
     const q = query(
-      collection(db, "contact_us"),
+      collection(db, collectionName),
       where("isRead", "==", false),
       orderBy("createdAt", "desc")
-    );
+    )
 
     const unsub = onSnapshot(q, (snapshot) => {
-      setNotifications(
-        snapshot.docs.map(doc => ({
+      setItems(
+        snapshot.docs.map((doc) => ({
           id: doc.id,
-          ...doc.data()
+          ...doc.data(),
         }))
-      );
-      setLoading(false);
-    });
+      )
+      setLoading(false)
+    })
 
-    return () => unsub();
-  }, []);
+    return () => unsub()
+  }, [collectionName])
 
-  return { notifications, loading };
-};
+  return {
+    items,
+    loading,
+    count: items.length,
+  }
+}

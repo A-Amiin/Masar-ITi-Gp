@@ -17,7 +17,7 @@ const menuItems = [
   { label: "التقارير", icon: FileText, route: "/reports" },
   { label: "الدردشة", icon: MessageSquare, route: "/chat" },
   { label: "طلبات الدعم", icon: Inbox, route: "/issues" },
-  { label: "طلبات التوظيف", icon: Briefcase, route: "/premium-users" },
+  { label: "طلبات التوظيف", icon: Briefcase, route: "/join-us" },
   { label: "الإعدادات", icon: Settings, route: "/settings" },
 ]
 

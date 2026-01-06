@@ -3,18 +3,18 @@ import { updateDoc, doc } from "firebase/firestore"
 import { useNavigate } from "react-router-dom"
 import { useUnreadNotifications } from "@/hooks/useAdminNotifications"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
-import { Inbox } from "lucide-react"
-const PopOver = () => {
+import { Briefcase } from "lucide-react"
+const PopOverJoinUs = () => {
     const navigate = useNavigate();
-    const { items: notifications, loading, count } = useUnreadNotifications("contact_us");
+    const { items: application } = useUnreadNotifications("join_us");
 
     return (
         <Popover>
             <PopoverTrigger asChild>
                 <button className="relative">
-                    <Inbox className="w-5 h-5 cursor-pointer" />
+                    <Briefcase className="w-5 h-5 cursor-pointer" />
 
-                    {count > 0 && (
+                    {application.length > 0 && (
                         <span className="
                     absolute -top-2 -right-3
                     w-4 h-4 flex items-center justify-center
@@ -22,7 +22,7 @@ const PopOver = () => {
                     bg-red-500
                     rounded-full
                   " >
-                    {count}
+                    {application.length}
                   </span>
                     )}
                 </button>
@@ -32,24 +32,24 @@ const PopOver = () => {
                 <div dir="rtl" className="flex flex-col">
                     <p className="text-sm font-semibold mb-2">إشعار جديد</p>
 
-                    {notifications.length === 0 && (
+                    {application.length === 0 && (
                         <p className="text-sm text-muted-foreground">
                             لا توجد اشعارات جديدة
                         </p>
                     )}
 
                     <div className="flex flex-col gap-1">
-                        {notifications.slice(0, 5).map((notif) => (
+                        {application.slice(0, 5).map((application) => (
                             <button
-                                key={notif.id}
+                                key={application.id}
                                 onClick={async () => {
-                                    await updateDoc(doc(db, "contact_us", notif.id), { isRead: true });
+                                    await updateDoc(doc(db, "contact_us", application.id), { isRead: true });
                                     navigate(`/issues`);
                                 }}
                                 className="text-left p-2 rounded-md hover:bg-muted transition"
                             >
-                                <p className="text-sm font-medium">رسالة جديدة من {notif.name}</p>
-                                <p className="text-xs text-muted-foreground">{notif.message}</p>
+                                <p className="text-sm font-medium">رسالة جديدة من {application.name}</p>
+                                <p className="text-xs text-muted-foreground">{application.message}</p>
                             </button>
                         ))}
                     </div>
@@ -69,4 +69,4 @@ const PopOver = () => {
     )
 }
 
-export default PopOver
+export default PopOverJoinUs
