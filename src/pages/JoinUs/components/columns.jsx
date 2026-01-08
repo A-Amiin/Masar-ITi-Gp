@@ -36,6 +36,7 @@ export const getColumns = (onView, onDelete, onMarkReviewed) => [
       }
 
       const status = map[row.original.status] ?? map.new
+      console.log("5585"+status)
 
       return (
         <div className="flex justify-center">
@@ -61,6 +62,7 @@ export const getColumns = (onView, onDelete, onMarkReviewed) => [
     header: "الإجراءات",
     cell: ({ row }) => {
       const handleView = async () => {
+        console.log("asdafagasdgs"+row.original.status)
         if (row.original.status === "new") {
           await onMarkReviewed(row.original.id)
         }

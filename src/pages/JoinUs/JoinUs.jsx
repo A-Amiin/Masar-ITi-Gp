@@ -8,6 +8,7 @@ const JoinUs = () => {
     Items: applications,
     loading,
     error,
+    setItems,
     useEdit,
     useDelete,
     selectedItem,
@@ -15,6 +16,14 @@ const JoinUs = () => {
   } = useCrudService("join_us")
 
   const handleMarkReviewed = async (id) => {
+    // 👇 optimistic update
+    setItems(prev =>
+      prev.map(item =>
+        item.id === id
+          ? { ...item, status: "reviewed" }
+          : item
+      )
+    )
     await useEdit(id, {
       isRead: true,
       status: "reviewed",

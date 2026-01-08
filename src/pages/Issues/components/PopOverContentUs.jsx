@@ -8,7 +8,6 @@ const PopOverContentUs = () => {
     const navigate = useNavigate();
     const { items: notifications } = useUnreadNotifications("contact_us");
 
-    console.log("number_contactus"+notifications.length);
     return (
         <Popover>
             <PopoverTrigger asChild>
@@ -23,7 +22,7 @@ const PopOverContentUs = () => {
                     bg-red-500
                     rounded-full
                   " >
-                    {}
+                    {notifications.length}
                   </span>
                     )}
                 </button>
@@ -44,7 +43,7 @@ const PopOverContentUs = () => {
                             <button
                                 key={notif.id}
                                 onClick={async () => {
-                                    await updateDoc(doc(db, "contact_us", notif.id), { isRead: true });
+                                    await updateDoc(doc(db, "contact_us", notif.id), { isRead: false });
                                     navigate(`/issues`);
                                 }}
                                 className="text-left p-2 rounded-md hover:bg-muted transition"

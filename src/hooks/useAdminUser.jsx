@@ -20,8 +20,6 @@ export const useAdminUser = () => {
         return
       }
 
-      console.log("AUTH UID:", firebaseUser.uid)
-
       const q = query(
         collection(db, "users"),
         where("user_Id", "==", firebaseUser.uid)
