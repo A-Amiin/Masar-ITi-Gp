@@ -43,7 +43,7 @@ const PopOverJoinUs = () => {
                             <button
                                 key={application.id}
                                 onClick={async () => {
-                                    await updateDoc(doc(db, "contact_us", application.id), { isRead: true });
+                                    await updateDoc(doc(db, "join_us", application.id), { isRead: true });
                                     navigate(`/issues`);
                                 }}
                                 className="text-left p-2 rounded-md hover:bg-muted transition"
