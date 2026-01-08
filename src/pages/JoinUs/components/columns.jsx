@@ -2,6 +2,7 @@ import { Eye, Trash2, Pencil } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover"
+import { cn } from "@/lib/utils"
 
 export const getColumns = (onView, onDelete, onChangeStatus) => [
   {
@@ -30,17 +31,17 @@ export const getColumns = (onView, onDelete, onChangeStatus) => [
     header: "الحالة",
     cell: ({ row }) => {
       const map = {
-        new: { label: "جديد", variant: "destructive" },
-        reviewed: { label: "قيد المراجعة", variant: "secondary" },
-        accepted: { label: "مقبول", variant: "default" },
-        rejected: { label: "مرفوض", variant: "outline" },
+        new: { label: "جديد", className: "bg-blue-500 text-white" },
+        reviewed: { label: "قيد المراجعة", className: "bg-yellow-400 text-white" },
+        accepted: { label: "مقبول", className: "bg-green-500 text-white" },
+        rejected: { label: "مرفوض", className: "bg-red-500 text-white" },
       }
 
       const status = map[row.original.status] ?? map.new
 
       return (
         <div className="flex justify-center">
-          <Badge variant={status.variant}>{status.label}</Badge>
+          <Badge className={status.className}>{status.label}</Badge>
         </div>
       )
     },
@@ -102,10 +103,13 @@ export const getColumns = (onView, onDelete, onChangeStatus) => [
                   return (
                     <Button
                       key={status.value}
-                      variant={
-                        row.original.status === status.value ? "secondary" : "ghost"
-                      }
-                      className="justify-start text-sm"
+                      className={cn(
+                        "justify-start text-sm",
+                        status.value === "new" && "bg-blue-500 text-white",
+                        status.value === "reviewed" && "bg-yellow-400 text-white",
+                        status.value === "accepted" && "bg-green-500 text-white",
+                        status.value === "rejected" && "bg-red-500 text-white"
+                      )}
                       disabled={disableChange}
                       onClick={async () => {
                         await onChangeStatus(row.original.id, status.value)
