@@ -7,7 +7,7 @@ import { Briefcase } from "lucide-react"
 const PopOverJoinUs = () => {
     const navigate = useNavigate();
     const { items: application } = useUnreadNotifications("join_us");
-
+    console.log("number_joinus"+application.length);
     return (
         <Popover>
             <PopoverTrigger asChild>

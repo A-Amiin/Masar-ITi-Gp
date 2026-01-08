@@ -4,17 +4,18 @@ import { useNavigate } from "react-router-dom"
 import { useUnreadNotifications } from "@/hooks/useAdminNotifications"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Inbox } from "lucide-react"
-const PopOver = () => {
+const PopOverContentUs = () => {
     const navigate = useNavigate();
-    const { items: notifications, loading, count } = useUnreadNotifications("contact_us");
+    const { items: notifications } = useUnreadNotifications("contact_us");
 
+    console.log("number_contactus"+notifications.length);
     return (
         <Popover>
             <PopoverTrigger asChild>
                 <button className="relative">
                     <Inbox className="w-5 h-5 cursor-pointer" />
 
-                    {count > 0 && (
+                    {notifications.length > 0 && (
                         <span className="
                     absolute -top-2 -right-3
                     w-4 h-4 flex items-center justify-center
@@ -22,7 +23,7 @@ const PopOver = () => {
                     bg-red-500
                     rounded-full
                   " >
-                    {count}
+                    {}
                   </span>
                     )}
                 </button>
@@ -69,4 +70,4 @@ const PopOver = () => {
     )
 }
 
-export default PopOver
+export default PopOverContentUs
