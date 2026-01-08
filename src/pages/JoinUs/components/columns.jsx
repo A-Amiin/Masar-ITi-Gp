@@ -1,7 +1,6 @@
 import { Eye, Trash2, Pencil } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { Select, SelectContent, SelectItem, SelectTrigger } from "@/components/ui/select"
 import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover"
 
 export const getColumns = (onView, onDelete, onChangeStatus) => [
@@ -93,25 +92,33 @@ export const getColumns = (onView, onDelete, onChangeStatus) => [
 
             <PopoverContent align="end" className="w-40 p-2">
               <div className="flex flex-col gap-1">
-                {statuses.map((status) => (
-                  <Button
-                    key={status.value}
-                    variant={
-                      row.original.status === status.value
-                        ? "secondary"
-                        : "ghost"
-                    }
-                    className="justify-start text-sm"
-                    onClick={() =>
-                      onChangeStatus(row.original.id, status.value)
-                    }
-                  >
-                    {status.label}
-                  </Button>
-                ))}
+                {statuses.map((status) => {
+                  const disableChange =
+                    (row.original.status === "accepted" &&
+                      status.value !== "accepted") ||
+                    (row.original.status === "rejected" &&
+                      status.value !== "rejected")
+
+                  return (
+                    <Button
+                      key={status.value}
+                      variant={
+                        row.original.status === status.value ? "secondary" : "ghost"
+                      }
+                      className="justify-start text-sm"
+                      disabled={disableChange}
+                      onClick={async () => {
+                        await onChangeStatus(row.original.id, status.value)
+                      }}
+                    >
+                      {status.label}
+                    </Button>
+                  )
+                })}
               </div>
             </PopoverContent>
           </Popover>
+
 
           {/* Delete */}
           <Button

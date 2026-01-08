@@ -4,40 +4,44 @@ import { getColumns } from "./components/columns"
 import ViewUserDialog from "./components/ViewIssueDialog"
 
 const JoinUs = () => {
-  const {
-    Items: applications,
-    loading,
-    error,
-    setItems,
-    useEdit,
-    useDelete,
-    selectedItem,
-    closeView,
-  } = useCrudService("join_us")
+  const { Items: applications, loading, error, setItems, useEdit, useDelete, selectedItem, closeView } = useCrudService("join_us")
 
-  const handleMarkReviewed = async (id) => {
-    // 👇 optimistic update
+  const handleChangeStatus = async (id, status) => {
     setItems(prev =>
       prev.map(item =>
-        item.id === id
-          ? { ...item, status: "reviewed" }
-          : item
+        item.id === id ? { ...item, status, isRead: true } : item
       )
     )
-    await useEdit(id, {
-      isRead: true,
-      status: "reviewed",
-    })
+
+    try {
+      await useEdit(id, { status, isRead: true })
+    } catch (err) {
+      console.error("Failed to update status:", err)
+      setItems(prev =>
+        prev.map(item =>
+          item.id === id ? { ...item, status: prev.find(i => i.id === id).status } : item
+        )
+      )
+    }
+  }
+
+  const handleDelete = async (id) => {
+    setItems(prev => prev.filter(item => item.id !== id))
+    await useDelete(id)
+  }
+
+  const handleView = async (item) => {
+    if (item.status === "new") {
+      await handleChangeStatus(item.id, "reviewed")
+    }
   }
 
   const columns = getColumns(
     (item) => {
-      if (item.status === "new") {
-        handleMarkReviewed(item.id)
-      }
+      handleView(item)
     },
-    (id) => useDelete(id),
-    handleMarkReviewed
+    handleDelete,
+    handleChangeStatus
   )
 
   if (loading) return <p>جاري التحميل...</p>
