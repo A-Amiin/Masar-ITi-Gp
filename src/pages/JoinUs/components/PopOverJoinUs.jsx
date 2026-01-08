@@ -44,8 +44,8 @@ const PopOverJoinUs = () => {
                                 key={application.id}
                                 onClick={async () => {
                                     await updateDoc(
-                                        doc(db, "join_us", application.id),
-                                        { isRead: true }
+                                        doc(db, "join_us", application.id ),
+                                        { isRead: false }
                                     );
                                     navigate("/join-us");
                                 }}
