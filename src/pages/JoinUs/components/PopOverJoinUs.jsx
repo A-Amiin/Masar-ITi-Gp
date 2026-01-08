@@ -59,7 +59,7 @@ const PopOverJoinUs = () => {
                 </div>
 
                 <button
-                    onClick={() => navigate("/issues")}
+                    onClick={() => navigate("/join-us")}
                     className="
                   mt-2 text-xs text-primary
                   hover:underline w-full text-center
