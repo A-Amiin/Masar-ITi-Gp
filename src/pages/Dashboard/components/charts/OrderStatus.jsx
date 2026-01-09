@@ -1,11 +1,36 @@
-import { Pie } from 'react-chartjs-2'
-import { Card, CardContent } from '@/components/ui/card'
-import { useChartsStore } from '@/store/useChartsStore'
-import { useChartTheme } from '@/hooks/useChartTheme'
+import { Pie } from "react-chartjs-2"
+import { Card, CardContent } from "@/components/ui/card"
+import { useChartTheme } from "@/hooks/useChartTheme"
+import { useCrudService } from "@/hooks/useCrudService"
+import { useMemo } from "react"
 
 export function OrderStatus() {
-  const { orderStatus } = useChartsStore()
+  const { Items: orders, loading } = useCrudService("orders")
   const { textColor } = useChartTheme()
+
+  const orderStatus = useMemo(() => {
+    const statusCount = {
+      completed: 0,
+      assigned: 0,
+      new: 0,
+      failed: 0,
+    }
+
+    orders.forEach((order) => {
+      if (statusCount[order.status] !== undefined) {
+        statusCount[order.status] += 1
+      }
+    })
+
+    return [
+      statusCount.completed,
+      statusCount.assigned,
+      statusCount.new,
+      statusCount.failed,
+    ]
+  }, [orders])
+
+  if (loading) return <p>جاري التحميل...</p>
 
   return (
     <Card className="rounded-2xl">
@@ -14,15 +39,15 @@ export function OrderStatus() {
 
         <Pie
           data={{
-            labels: ['تم التوصيل', 'قيد الشحن', 'في الطريق', 'الملغى'],
+            labels: ["تم التوصيل", "قيد الشحن", "في الطريق", "الملغى"],
             datasets: [
               {
                 data: orderStatus,
                 backgroundColor: [
-                  '#1d4ed8',
-                  '#94a3b8',
-                  '#06b6d4',
-                  '#facc15',
+                  "#1d4ed8",
+                  "#94a3b8",
+                  "#06b6d4",
+                  "#facc15",
                 ],
               },
             ],
