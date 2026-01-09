@@ -7,28 +7,28 @@ import { cn } from "@/lib/utils"
 export const getColumns = (onView, onDelete, onChangeStatus) => [
   {
     accessorKey: "name",
-    header: "الاسم",
+    header: () => <div className="text-center">الاسم</div>,
     cell: ({ row }) => (
       <div className="text-center font-medium">{row.original.name}</div>
     ),
   },
   {
     accessorKey: "phone",
-    header: "رقم الهاتف",
+    header: () => <div className="text-center">رقم الهاتف</div>,
     cell: ({ row }) => (
       <div className="text-center">{row.original.phone}</div>
     ),
   },
   {
     accessorKey: "city",
-    header: "المحافظة",
+    header: () => <div className="text-center">المحافظة</div>,
     cell: ({ row }) => (
       <div className="text-center">{row.original.city}</div>
     ),
   },
   {
     accessorKey: "status",
-    header: "الحالة",
+    header: () => <div className="text-center">الحالة</div>,
     cell: ({ row }) => {
       const map = {
         new: { label: "جديد", className: "bg-blue-500 text-white" },
@@ -48,7 +48,7 @@ export const getColumns = (onView, onDelete, onChangeStatus) => [
   },
   {
     accessorKey: "createdAt",
-    header: "التاريخ",
+    header: () => <div className="text-center">التاريخ</div>,
     cell: ({ row }) => {
       const date = row.original.createdAt?.toDate?.()
       return (
@@ -60,7 +60,7 @@ export const getColumns = (onView, onDelete, onChangeStatus) => [
   },
   {
     id: "actions",
-    header: "الإجراءات",
+    header: () => <div className="text-center">الإجراءات</div>,
     cell: ({ row }) => {
       const handleView = async () => {
         if (row.original.status === "new") {
@@ -78,12 +78,10 @@ export const getColumns = (onView, onDelete, onChangeStatus) => [
 
       return (
         <div className="flex justify-center gap-2">
-          {/* View */}
           <Button size="icon" variant="ghost" onClick={handleView}>
             <Eye className="w-4 h-4" />
           </Button>
 
-          {/* Edit Status */}
           <Popover>
             <PopoverTrigger asChild>
               <Button size="icon" variant="ghost">
@@ -123,8 +121,6 @@ export const getColumns = (onView, onDelete, onChangeStatus) => [
             </PopoverContent>
           </Popover>
 
-
-          {/* Delete */}
           <Button
             size="icon"
             variant="ghost"
