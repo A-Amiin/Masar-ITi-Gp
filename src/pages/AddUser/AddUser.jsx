@@ -54,7 +54,7 @@ const AddUser = () => {
     <div className="space-y-4">
       <h1 className="text-xl font-bold">قائمة المستخدمين</h1>
 
-      <div className="border rounded-md p-4">
+      <div className="border rounded-md p-4 bg-white dark:bg-black/50 shadow-sm">
         <DataTable
           columns={columns}
           data={users}
