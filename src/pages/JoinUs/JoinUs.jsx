@@ -56,6 +56,7 @@ const JoinUs = () => {
           columns={columns}
           data={applications}
           searchPlaceholder="ابحث بالاسم أو رقم الهاتف..."
+          enableCreate={false}
         />
       </div>
 

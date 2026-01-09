@@ -51,6 +51,7 @@ const Issues = () => {
           columns={columns}
           data={issues}
           searchPlaceholder="ابحث باسم العميل أو البريد..."
+          enableCreate={false}
         />
       </div>
 
