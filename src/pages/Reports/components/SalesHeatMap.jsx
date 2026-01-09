@@ -2,31 +2,31 @@ import { MapContainer, TileLayer, useMap } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import "leaflet.heat";
 import L from "leaflet";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 
-const heatPoints = [
-  [30.0444, 31.2357, 0.9], 
-  [30.0333, 31.2333, 0.8], 
-  [31.2001, 29.9187, 0.7], 
-  [30.7865, 31.0004, 0.6],
-  [31.0409, 31.3785, 0.65], 
-  [27.1809, 31.1837, 0.5],
-  [26.5591, 31.6957, 0.4],
-  [25.6872, 32.6396, 0.3],
-];
-
-const HeatLayer = () => {
+const HeatLayer = ({ points }) => {
   const map = useMap();
-  const safeHeatPoints = heatPoints.filter(
-  p =>
-    Array.isArray(p) &&
-    p.length >= 2 &&
-    !isNaN(p[0]) &&
-    !isNaN(p[1])
-);
+
+  // تحويل بيانات Firebase → HeatMap format
+  const heatPoints = useMemo(() => {
+    return points
+      .filter(
+        (p) =>
+          p &&
+          !isNaN(p.lat) &&
+          !isNaN(p.lng)
+      )
+      .map((p) => [
+        p.lat,
+        p.lng,
+        p.status === "completed" ? 1 : 0.6, // وزن أعلى للمكتمل
+      ]);
+  }, [points]);
 
   useEffect(() => {
-    const heatLayer = L.heatLayer(safeHeatPoints, {
+    if (!heatPoints.length) return;
+
+    const heatLayer = L.heatLayer(heatPoints, {
       radius: 40,
       blur: 25,
       maxZoom: 7,
@@ -35,12 +35,12 @@ const HeatLayer = () => {
     return () => {
       map.removeLayer(heatLayer);
     };
-  }, [map]);
+  }, [map, heatPoints]);
 
   return null;
 };
 
-const SalesHeatMap = () => {
+const SalesHeatMap = ({ points }) => {
   return (
     <MapContainer
       center={[26.8206, 30.8025]}
@@ -52,7 +52,7 @@ const SalesHeatMap = () => {
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
 
-      <HeatLayer />
+      <HeatLayer points={points} />
     </MapContainer>
   );
 };

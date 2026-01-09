@@ -316,8 +316,9 @@ import StatsCard from "./components/StatsCard";
 import { subscribeToCustomers } from "@/services/customers.service";
 
 // Firebase
-import { addDoc, collection, serverTimestamp } from "firebase/firestore";
+import { collection, doc, setDoc, serverTimestamp, onSnapshot  } from "firebase/firestore";
 import { db } from "@/lib/firebase";
+
 
 // Turf
 import booleanPointInPolygon from "@turf/boolean-point-in-polygon";
@@ -329,6 +330,13 @@ const Tasks = () => {
 
   const [areasGeoJson, setAreasGeoJson] = useState(null);
   const [selectedAreaId, setSelectedAreaId] = useState(null);
+const [customerTasks, setCustomerTasks] = useState({});
+const [stats, setStats] = useState({
+  assigned: 0,
+  completed: 0,
+  returned: 0,
+  total: 0,
+});
 
   /* =======================
      تحميل العملاء
@@ -351,23 +359,34 @@ const Tasks = () => {
   /* =======================
      تجهيز العملاء lat / lng
   ======================= */
-  const effectiveCustomers = useMemo(() => {
-    return customers
-      .map((c) => {
-        const lat =
-          typeof c.address?.latitude === "number"
-            ? c.address.latitude
-            : c.address?._lat;
+const effectiveCustomers = useMemo(() => {
+  return customers
+    .map((c) => {
+      let lat = null;
+      let lng = null;
 
-        const lng =
-          typeof c.address?.longitude === "number"
-            ? c.address.longitude
-            : c.address?._long;
+      if (Array.isArray(c.address)) {
+        lat = Number(c.address[0]);
+        lng = Number(c.address[1]);
+      } else if (
+        c.address &&
+        typeof c.address === "object"
+      ) {
+        lat = Number(c.address.lat ?? c.address.latitude);
+        lng = Number(c.address.lng ?? c.address.longitude);
+      }
 
-        return { ...c, lat, lng };
-      })
-      .filter((c) => Number.isFinite(c.lat) && Number.isFinite(c.lng));
-  }, [customers]);
+      return {
+        id: c.id,
+        name: c.nameAr || c.name,
+        phone: c.phone,
+        lat,
+        lng,
+      };
+    })
+    .filter((c) => !Number.isNaN(c.lat) && !Number.isNaN(c.lng));
+}, [customers]);
+
 
   /* =======================
      المنطقة المختارة
@@ -409,6 +428,7 @@ const Tasks = () => {
   ======================= */
   const optimizeRouteSimple = (list) => {
     if (list.length < 2) return list;
+
     const visited = new Set();
     const route = [];
     let current = list[0];
@@ -449,49 +469,79 @@ const Tasks = () => {
   ======================= */
   const fetchRouteFromOSRM = async (ordered) => {
     if (ordered.length < 2) return [];
-    const coords = ordered.map((c) => `${c.lng},${c.lat}`).join(";");
-    const res = await fetch(
-      `https://router.project-osrm.org/route/v1/driving/${coords}?overview=full&geometries=geojson`
-    );
-    const data = await res.json();
-    return data.routes[0].geometry.coordinates.map(
-      ([lng, lat]) => [lat, lng]
-    );
+
+    try {
+      const coords = ordered.map((c) => `${c.lng},${c.lat}`).join(";");
+      const res = await fetch(
+        `https://router.project-osrm.org/route/v1/driving/${coords}?overview=full&geometries=geojson`
+      );
+      const data = await res.json();
+
+      if (!data.routes?.length) return [];
+
+      return data.routes[0].geometry.coordinates.map(
+        ([lng, lat]) => [lat, lng]
+      );
+    } catch (err) {
+      console.error("OSRM error:", err);
+      return [];
+    }
   };
 
   /* =======================
      زر أفضل مسار
   ======================= */
   const handleOptimizeRoute = async () => {
-    if (!customersInsideArea.length) return setRoutePoints([]);
+    if (!selectedAreaId || !customersInsideArea.length) {
+      setRoutePoints([]);
+      return;
+    }
+
     const ordered = optimizeRouteSimple(customersInsideArea);
     const route = await fetchRouteFromOSRM(ordered);
     setRoutePoints(route);
   };
 
-  /* =======================
-     🔥 تخزين المهمة
-  ======================= */
-  const handleConfirmTask = async ({
-    agent,
-    taskType,
-    area,
-    products,
-  }) => {
-    const totalPrice = products.reduce(
+
+const TASK_TYPE_LABELS = {
+  delivery: "توصيل",
+  collection: "تحصيل",
+  return: "استرجاع",
+  pickup: "استلام",
+};
+
+const handleConfirmTask = async ({
+  representativeId,
+  area,
+  customerTasks,
+}) => {
+  if (!representativeId || !area || !customerTasks) return;
+
+  for (const customer of customersInsideArea) {
+    const config = customerTasks[customer.id];
+    if (!config || !config.products?.length) continue;
+
+    const totalPrice = config.products.reduce(
       (sum, p) => sum + (p.price ?? 0) * (p.quantity ?? 1),
       0
     );
 
-    await addDoc(collection(db, "tasks"), {
+    const orderData = {
       status: "assigned",
-      taskType,
       createdAt: serverTimestamp(),
+      representativeId,
+taskType: {
+  key: config.taskType,
+  label: TASK_TYPE_LABELS[config.taskType],
+},
 
-      agent: {
-        id: agent.id,
-        name: agent.name,
-        phone: agent.phone,
+
+      customer: {
+        id: customer.id,
+        name: customer.name,
+        phone: customer.phone,
+        lat: customer.lat,
+        lng: customer.lng,
       },
 
       area: {
@@ -499,30 +549,63 @@ const Tasks = () => {
         name: area.properties?.SHYK_ANA_1,
       },
 
-      customers: customersInsideArea.map((c) => ({
-        id: c.id,
-        name: c.nameAr || c.name,
-        lat: c.lat,
-        lng: c.lng,
-        phone: c.phone,
-      })),
-
-  route: routePoints.map(([lat, lng]) => ({
-  lat,
-  lng,
-})),
-
-
-      products: products.map((p) => ({
+      products: config.products.map((p) => ({
         id: p.id,
         name: p.nameAr || p.nameEn,
         price: p.price,
-        quantity: p.quantity ?? 1,
+        quantity: p.quantity,
       })),
 
       totalPrice,
+    };
+
+    const orderId = doc(collection(db, "orders")).id;
+
+    // تحت المندوب
+    await setDoc(
+      doc(db, "representative", representativeId, "orders", orderId),
+      orderData
+    );
+
+    // collection عامة
+    await setDoc(
+      doc(db, "orders", orderId),
+      orderData
+    );
+  }
+};
+
+
+
+useEffect(() => {
+  console.log("customers state:", customers);
+}, [customers]);
+useEffect(() => {
+  const ordersRef = collection(db, "orders");
+
+  const unsub = onSnapshot(ordersRef, (snapshot) => {
+    let assigned = 0;
+    let completed = 0;
+    let returned = 0;
+
+    snapshot.forEach((doc) => {
+      const order = doc.data();
+
+      if (order.status === "assigned") assigned++;
+      if (order.status === "completed") completed++;
+      if (order.status === "returned") returned++;
     });
-  };
+
+    setStats({
+      assigned,
+      completed,
+      returned,
+      total: snapshot.size, // كل المهام
+    });
+  });
+
+  return () => unsub();
+}, []);
 
   return (
     <div className="space-y-6" dir="rtl">
@@ -531,26 +614,29 @@ const Tasks = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 h-[500px]">
           <MapView
-            customers={customersInsideArea}
+            customers={effectiveCustomers}
+            areaCustomers={customersInsideArea}
             routePoints={routePoints}
             areasGeoJson={areasGeoJson}
             selectedAreaId={selectedAreaId}
           />
         </div>
 
-        <AssignForm
-          onOptimizeRoute={handleOptimizeRoute}
-          onAreaChange={setSelectedAreaId}
-          onConfirmTask={handleConfirmTask}
-        />
-      </div>
+    <AssignForm
+  customersInsideArea={customersInsideArea}
+  onOptimizeRoute={handleOptimizeRoute}
+  onAreaChange={setSelectedAreaId}
+  onConfirmTask={handleConfirmTask}
+/>
 
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <StatsCard title="معلقة" value="2" />
-        <StatsCard title="مكتملة" value="14" />
-        <StatsCard title="قيد التنفيذ" value="8" />
-        <StatsCard title="المهام اليوم" value="24" />
       </div>
+<div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+  <StatsCard title="معلقة" value={stats.assigned} />
+  <StatsCard title="مكتملة" value={stats.completed} />
+  <StatsCard title="مرتجع" value={stats.returned} />
+  <StatsCard title="المهام" value={stats.total} />
+</div>
+
     </div>
   );
 };
