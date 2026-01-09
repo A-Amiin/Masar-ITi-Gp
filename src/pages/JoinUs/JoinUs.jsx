@@ -51,7 +51,7 @@ const JoinUs = () => {
     <div className="space-y-4">
       <h1 className="text-xl font-bold">طلبات الانضمام</h1>
 
-      <div className="border rounded-md p-4">
+      <div className="border rounded-md p-4 bg-white dark:bg-black/50">
         <DataTable
           columns={columns}
           data={applications}
