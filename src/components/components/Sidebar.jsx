@@ -9,15 +9,15 @@ import useAuthStore from "@/store/authStore"
 const menuItems = [
   { label: "لوحة التحكم", icon: LayoutGrid, route: "/dashboard" },
   { label: "إضافة مستخدم", icon: UserPlus, route: "/add-user" },
-  { label: "المندوبين", icon: Users, route: "/agents" },
+  { label: "طلبات التوظيف", icon: Briefcase, route: "/join-us" },
+  { label: "طلبات الدعم", icon: Inbox, route: "/issues" },
   { label: "العملاء", icon: User, route: "/customers" },
+  { label: "المندوبين", icon: Users, route: "/agents" },
+  { label: "الطلبات", icon: ShoppingCart, route: "/orders" },
+  { label: "الدردشة", icon: MessageSquare, route: "/chat" },
   { label: "توزيع المهام", icon: MapPin, route: "/tasks" },
   { label: "المخزون", icon: Box, route: "/inventory" },
-  { label: "الطلبات", icon: ShoppingCart, route: "/orders" },
   { label: "التقارير", icon: FileText, route: "/reports" },
-  { label: "الدردشة", icon: MessageSquare, route: "/chat" },
-  { label: "طلبات الدعم", icon: Inbox, route: "/issues" },
-  { label: "طلبات التوظيف", icon: Briefcase, route: "/join-us" },
   { label: "الإعدادات", icon: Settings, route: "/settings" },
 ]
 
