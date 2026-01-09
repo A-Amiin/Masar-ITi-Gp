@@ -5,21 +5,20 @@ export const firestoreCRUD = (collectionName) => ({
   addItem: async (data) => {
     const colRef = collection(db, collectionName);
 
-    if (
-      collectionName === "users" &&
-      data.role === "representative" &&
-      data.user_Id
-    ) {
-      const { user_Id, ...rest } = data;
+    if (collectionName === "representative") {
+      if (!data.user_Id) {
+        throw new Error("representative must have user_Id");
+      }
 
-      const docRef = doc(db, collectionName, user_Id);
+      const docRef = doc(db, collectionName, data.user_Id);
 
       await setDoc(docRef, {
-        ...rest,
-        user_Id: user_Id, 
+        ...data,
+        user_Id: data.user_Id,
+        createdAt: new Date(),
       });
 
-      return user_Id;
+      return data.user_Id;
     }
 
     const docRef = await addDoc(colRef, {

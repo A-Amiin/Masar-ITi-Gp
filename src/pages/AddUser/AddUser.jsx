@@ -19,6 +19,11 @@ const AddUser = () => {
     closeView,
   } = useCrudService("users")
 
+  // representative collection
+  const {
+    useCreate: useCreateRepresentative,
+  } = useCrudService("representative")
+
   const [open, setOpen] = useState(false)
 
   const columns = getColumns(
@@ -29,27 +34,38 @@ const AddUser = () => {
   const handleCreate = async (data) => {
     const { email, password, ...rest } = data
 
-    // 1️⃣ Auth
-    const userCredential =
-      await createUserWithEmailAndPassword(auth, email, password)
+    try {
+      // Firebase Auth
+      const userCredential =
+        await createUserWithEmailAndPassword(auth, email, password)
 
-    const uid = userCredential.user.uid
+      const uid = userCredential.user.uid
 
-    // 2️⃣ Firestore
-    await useCreate({
-      ...rest,
-      email,
-      user_Id: uid,
-      createdAt: new Date(),
-      
-    })
+      const payload = {
+        ...rest,
+        email,
+        user_Id: uid,
+        createdAt: new Date(),
+      }
 
-    setOpen(false)
+      // Add to users & representative
+      await Promise.all([
+        useCreate(payload),
+        useCreateRepresentative({
+          ...payload,
+          role: "representative",
+        }),
+      ])
+
+      setOpen(false)
+    } catch (err) {
+      console.error("Error creating user:", err)
+    }
   }
 
   if (loading) return <p>جاري التحميل...</p>
   if (error) return <p>حصل خطأ</p>
-  console.log(error)
+
   return (
     <div className="space-y-4">
       <h1 className="text-xl font-bold">قائمة المستخدمين</h1>
