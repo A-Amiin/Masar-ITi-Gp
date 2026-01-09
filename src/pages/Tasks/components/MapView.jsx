@@ -1,56 +1,47 @@
-import React from "react";
 import {
   MapContainer,
   TileLayer,
-  Marker,
+  CircleMarker,
   Polyline,
   GeoJSON,
+  ZoomControl,
 } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 
-import L from "leaflet";
-delete L.Icon.Default.prototype._getIconUrl;
-L.Icon.Default.mergeOptions({
-  iconRetinaUrl:
-    "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png",
-  iconUrl:
-    "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png",
-  shadowUrl:
-    "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
-});
-
 const MapView = ({
-  customers = [],
+  customers = [],        // كل العملاء
+  areaCustomers = [],    // العملاء داخل المنطقة
   routePoints = [],
   areasGeoJson,
   selectedAreaId,
 }) => {
-  const areaStyle = (feature) => ({
-    color:
-      String(feature.id) === String(selectedAreaId)
-        ? "#2563eb"
-        : "#16a34a",
-    weight: 2,
-    fillOpacity: 0.35,
-  });
+  // IDs العملاء داخل المنطقة
+  const areaCustomerIds = new Set(
+    areaCustomers.map((c) => c.id)
+  );
 
   return (
     <MapContainer
-      center={
-        customers[0]
-          ? [customers[0].lat, customers[0].lng]
-          : [30.06, 31.33]
-      }
-      zoom={13}
+      center={[30.0444, 31.2357]}
+      zoom={11}
+      zoomControl={false}
       style={{ height: "100%", width: "100%" }}
     >
       <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+      <ZoomControl position="topright" />
 
-      {/* مناطق GeoJSON */}
+      {/* المناطق */}
       {areasGeoJson && (
         <GeoJSON
           data={areasGeoJson}
-          style={areaStyle}
+          style={(feature) => ({
+            color:
+              String(feature.id) === String(selectedAreaId)
+                ? "#2563eb"
+                : "#16a34a",
+            weight: 2,
+            fillOpacity: 0.35,
+          })}
           onEachFeature={(feature, layer) => {
             layer.bindTooltip(
               feature.properties?.SHYK_ANA_1,
@@ -60,14 +51,33 @@ const MapView = ({
         />
       )}
 
-      {/* العملاء */}
+      {/* كل العملاء */}
       {customers.map((c) => (
-        <Marker key={c.id} position={[c.lat, c.lng]} />
+        <CircleMarker
+          key={c.id}
+          center={[c.lat, c.lng]}
+          radius={5}
+          pathOptions={{
+            color: areaCustomerIds.has(c.id)
+              ? "#2563eb"   // داخل المنطقة
+              : "#9ca3af",  // خارج المنطقة
+            fillColor: areaCustomerIds.has(c.id)
+              ? "#3b82f6"
+              : "#d1d5db",
+            fillOpacity: 1,
+          }}
+        />
       ))}
 
       {/* المسار */}
       {routePoints.length > 1 && (
-        <Polyline positions={routePoints} weight={5} />
+        <Polyline
+          positions={routePoints}
+          pathOptions={{
+            color: "#0ea5e9",
+            weight: 4,
+          }}
+        />
       )}
     </MapContainer>
   );

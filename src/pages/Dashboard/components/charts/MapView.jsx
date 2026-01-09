@@ -1,9 +1,14 @@
-import { MapContainer, TileLayer, CircleMarker, Polyline, ZoomControl } from "react-leaflet";
+import {
+  MapContainer,
+  TileLayer,
+  CircleMarker,
+  Polyline,
+  ZoomControl,
+} from "react-leaflet";
 import { useMemo } from "react";
 import "leaflet/dist/leaflet.css";
 
 export default function MapView() {
-
   const center = useMemo(() => [30.0444, 31.2357], []);
 
   const agents = [
@@ -35,14 +40,11 @@ export default function MapView() {
         zoomControl={false}
         style={{ height: "100%", width: "100%" }}
       >
-        <TileLayer
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        />
+        <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
 
- 
         <ZoomControl position="topright" />
 
-  
+        {/* المندوبين */}
         {agents.map((agent) => (
           <CircleMarker
             key={agent.id}
@@ -50,17 +52,26 @@ export default function MapView() {
             radius={8}
             pathOptions={{
               color: agent.status === "online" ? "#16a34a" : "#9ca3af",
-              fillColor: agent.status === "online" ? "#22c55e" : "#d1d5db",
+              fillColor:
+                agent.status === "online" ? "#22c55e" : "#d1d5db",
               fillOpacity: 1,
             }}
           />
         ))}
 
-    
-     
+        {/* مسار المندوب */}
+        {route.length > 1 && (
+          <Polyline
+            positions={route}
+            pathOptions={{
+              color: "#0ea5e9",
+              weight: 4,
+            }}
+          />
+        )}
       </MapContainer>
 
-
+      {/* Legend */}
       <div
         style={{
           position: "absolute",
@@ -75,31 +86,51 @@ export default function MapView() {
         }}
       >
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          <span style={{
-            width: 12,
-            height: 12,
-            borderRadius: "50%",
-            background: "#22c55e"
-          }} />
+          <span
+            style={{
+              width: 12,
+              height: 12,
+              borderRadius: "50%",
+              background: "#22c55e",
+            }}
+          />
           مندوب متصل
         </div>
 
-        <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 6 }}>
-          <span style={{
-            width: 12,
-            height: 12,
-            borderRadius: "50%",
-            background: "#d1d5db"
-          }} />
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 8,
+            marginTop: 6,
+          }}
+        >
+          <span
+            style={{
+              width: 12,
+              height: 12,
+              borderRadius: "50%",
+              background: "#d1d5db",
+            }}
+          />
           مندوب غير متصل
         </div>
 
-        <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 6 }}>
-          <span style={{
-            width: 24,
-            height: 3,
-            background: "#0ea5e9"
-          }} />
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 8,
+            marginTop: 6,
+          }}
+        >
+          <span
+            style={{
+              width: 24,
+              height: 3,
+              background: "#0ea5e9",
+            }}
+          />
           مسار المندوب
         </div>
       </div>

@@ -153,7 +153,10 @@
   --sidebar-border: rgba(255, 255, 255, 0.1);
   --sidebar-ring: var(--brand-primary);
 }
-
+.leaflet-container {
+  position: relative;
+  z-index: 1;
+}
 /* ===============================
    Base Styles
 ================================ */
