@@ -6,10 +6,15 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 
-export function DataTable({ columns, data, handleCreate = () => {}, enableCreate = true, enablePagination = true, pageSize = 5 }) {
-  
+export function DataTable({ columns, data, handleCreate = () => {}, enableCreate = true, enablePagination = true, pageSize = 5}) {
   const [columnFilters, setColumnFilters] = React.useState([])
   const [sorting, setSorting] = React.useState([])
+
+  // Pagination State
+  const [pagination, setPagination] = React.useState({
+    pageIndex: 0,
+    pageSize,
+  })
 
   const table = useReactTable({
     data,
@@ -17,13 +22,11 @@ export function DataTable({ columns, data, handleCreate = () => {}, enableCreate
     state: {
       sorting,
       columnFilters,
-      pagination: {
-        pageIndex: 0,
-        pageSize,
-      },
+      pagination,
     },
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
+    onPaginationChange: setPagination,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getSortedRowModel: getSortedRowModel(),
@@ -112,8 +115,7 @@ export function DataTable({ columns, data, handleCreate = () => {}, enableCreate
           </Button>
 
           <span className="text-sm">
-            صفحة {table.getState().pagination.pageIndex + 1} من{" "}
-            {table.getPageCount()}
+            صفحة {pagination.pageIndex + 1} من {table.getPageCount()}
           </span>
 
           <Button
