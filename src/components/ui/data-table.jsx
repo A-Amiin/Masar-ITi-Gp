@@ -2,15 +2,12 @@
 
 import * as React from "react"
 import { flexRender, getCoreRowModel, getFilteredRowModel, getPaginationRowModel, getSortedRowModel, useReactTable } from "@tanstack/react-table"
-import {Table,TableBody,TableCell,TableHead,TableHeader,TableRow } from "@/components/ui/table"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 
-export function DataTable({
-  columns,
-  data,
-  handleCreate = () => {},
-}) {
+export function DataTable({ columns, data, handleCreate = () => {}, enableCreate = true, enablePagination = true, pageSize = 5 }) {
+  
   const [columnFilters, setColumnFilters] = React.useState([])
   const [sorting, setSorting] = React.useState([])
 
@@ -20,6 +17,10 @@ export function DataTable({
     state: {
       sorting,
       columnFilters,
+      pagination: {
+        pageIndex: 0,
+        pageSize,
+      },
     },
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
@@ -31,25 +32,23 @@ export function DataTable({
 
   return (
     <div className="space-y-4">
-      
-      {/* 🔍 Filter */}
+
+      {/* 🔍 Filter + Create */}
       <div className="flex items-center justify-between py-4">
         <Input
           placeholder="بحث بالاسم..."
-          value={(table.getColumn("name")?.getFilterValue()) ?? ""}
+          value={table.getColumn("name")?.getFilterValue() ?? ""}
           onChange={(e) =>
             table.getColumn("name")?.setFilterValue(e.target.value)
           }
           className="max-w-sm"
         />
 
-        <Button
-          size="sm"
-          onClick={() => handleCreate()}
-        >
-         إضافه عنصر جديد
-        </Button>
-
+        {enableCreate && (
+          <Button size="sm" onClick={handleCreate}>
+            إضافة عنصر جديد
+          </Button>
+        )}
       </div>
 
       {/* 📋 Table */}
@@ -60,8 +59,9 @@ export function DataTable({
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
                   <TableHead
-                  className={"bg-gray-100 dark:bg-gray-800"}
-                  key={header.id}>
+                    key={header.id}
+                    className="bg-gray-100 dark:bg-gray-800"
+                  >
                     {header.isPlaceholder
                       ? null
                       : flexRender(
@@ -75,7 +75,7 @@ export function DataTable({
           </TableHeader>
 
           <TableBody>
-            {table.getRowModel().rows?.length ? (
+            {table.getRowModel().rows.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow key={row.id}>
                   {row.getVisibleCells().map((cell) => (
@@ -100,24 +100,32 @@ export function DataTable({
       </div>
 
       {/* 📄 Pagination */}
-      <div className="flex items-center justify-end gap-2">
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => table.previousPage()}
-          disabled={!table.getCanPreviousPage()}
-        >
-          السابق
-        </Button>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => table.nextPage()}
-          disabled={!table.getCanNextPage()}
-        >
-          التالي
-        </Button>
-      </div>
+      {enablePagination && (
+        <div className="flex items-center justify-end gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => table.previousPage()}
+            disabled={!table.getCanPreviousPage()}
+          >
+            السابق
+          </Button>
+
+          <span className="text-sm">
+            صفحة {table.getState().pagination.pageIndex + 1} من{" "}
+            {table.getPageCount()}
+          </span>
+
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => table.nextPage()}
+            disabled={!table.getCanNextPage()}
+          >
+            التالي
+          </Button>
+        </div>
+      )}
     </div>
   )
 }
