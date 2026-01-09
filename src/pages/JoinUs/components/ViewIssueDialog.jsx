@@ -4,10 +4,10 @@ import { Button } from "@/components/ui/button"
 import { format } from "date-fns"
 
 const statusMap = {
-  new: { label: "جديد", variant: "destructive" },
-  reviewed: { label: "قيد المراجعة", variant: "secondary" },
-  accepted: { label: "مقبول", variant: "default" },
-  rejected: { label: "مرفوض", variant: "outline" },
+  new: { label: "جديد", className: "bg-blue-500 text-white" },
+  reviewed: { label: "قيد المراجعة", className: "bg-yellow-400 text-white" },
+  accepted: { label: "مقبول", className: "bg-green-500 text-white" },
+  rejected: { label: "مرفوض", className: "bg-red-500 text-white" },
 }
 
 const ViewJoinDialog = ({ open, onOpenChange, item }) => {
@@ -29,7 +29,7 @@ const ViewJoinDialog = ({ open, onOpenChange, item }) => {
 
           <div>
             <p className="text-sm text-muted-foreground mb-1">الحالة</p>
-            <Badge variant={status.variant}>{status.label}</Badge>
+            <Badge className={status.className}>{status.label}</Badge>
           </div>
 
           <Info

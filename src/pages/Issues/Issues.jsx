@@ -46,11 +46,12 @@ const Issues = () => {
     <div className="space-y-4">
       <h1 className="text-xl font-bold">قائمة الرسائل</h1>
 
-      <div className="border rounded-md p-4">
+      <div className="border rounded-md p-4 bg-white dark:bg-black/50">
         <DataTable
           columns={columns}
           data={issues}
           searchPlaceholder="ابحث باسم العميل أو البريد..."
+          enableCreate={false}
         />
       </div>
 

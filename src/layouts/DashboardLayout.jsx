@@ -7,7 +7,7 @@ const DashboardLayout = () => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   return (
-    <div dir="rtl" className="h-screen bg-gray-100 dark:bg-background">
+    <div dir="rtl" className="h-screen bg-gray-100 dark:bg-background overflow-hidden">
       {/* Navbar */}
       <header className="fixed top-0 inset-x-0 z-50 h-16 bg-white dark:bg-background border-b border-border dark:border-muted-dark shadow-sm">
         <AppNavbar />
@@ -19,7 +19,7 @@ const DashboardLayout = () => {
         <Sidebar collapsed={sidebarCollapsed} setCollapsed={setSidebarCollapsed} />
 
         {/* Main Content */}
-        <main className="flex-1 p-6 overflow-y-auto h-[calc(100vh-4rem)] transition-all duration-300">
+        <main className="flex-1 p-6 overflow-y-auto h-[calc(100vh-4rem)] transition-all duration-300 scrollbar">
           <Outlet />
         </main>
       </div>
