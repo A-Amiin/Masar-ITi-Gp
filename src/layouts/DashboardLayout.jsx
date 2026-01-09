@@ -19,7 +19,7 @@ const DashboardLayout = () => {
         <Sidebar collapsed={sidebarCollapsed} setCollapsed={setSidebarCollapsed} />
 
         {/* Main Content */}
-        <main className="flex-1 p-6 overflow-y-auto h-[calc(100vh-4rem)] transition-all duration-300">
+        <main className="flex-1 p-6 overflow-y-auto h-[calc(100vh-4rem)] transition-all duration-300 scrollbar">
           <Outlet />
         </main>
       </div>
