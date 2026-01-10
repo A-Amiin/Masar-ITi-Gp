@@ -11,14 +11,14 @@ export default function ChatWindow({
   if (!selectedChat) {
     return (
       <div className="flex-1 flex items-center justify-center text-muted-foreground">
-        اختر محادثة لبدء الشات
+        اختر مندوب لبدء المحادثة
       </div>
     )
   }
 
   return (
-    <div className="flex-1 flex flex-col h-full bg-background">
-      <ChatHeader chatId={selectedChat.id} />
+    <div className="flex-1 flex flex-col">
+      <ChatHeader representative={selectedChat.representative} />
 
       <MessagesList
         messages={messages}
