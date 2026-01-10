@@ -6,19 +6,24 @@ import PopOverJoinUs from "@/pages/JoinUs/components/PopOverJoinUs"
 import UserAvatarDialog from "@/components/components/UserAvatarDialog"
 import ThemeToggle from "./ThemeToggle"
 
+/* 🔔 الجديد */
+import NotificationBell from "@/components/components/NotificationBell"
+
 const AppNavbar = () => {
   const { user, loading } = useAdminUser()
-  const { theme, toggleTheme } = useInitTheme();
+  const { theme, toggleTheme } = useInitTheme()
   if (loading) return null
 
   return (
-    <header className="
-      container-2xl mx-auto px-4
-      h-16 w-full
-      border-b border-border dark:border-muted-dark
-      bg-background dark:bg-background-dark
-      flex items-center justify-between
-    ">
+    <header
+      className="
+        container-2xl mx-auto px-4
+        h-16 w-full
+        border-b border-border dark:border-muted-dark
+        bg-background dark:bg-background-dark
+        flex items-center justify-between
+      "
+    >
       {/* Left */}
       <div className="flex items-center gap-3">
         <Link to="/dashboard" className="flex items-center gap-2">
@@ -30,8 +35,10 @@ const AppNavbar = () => {
       {user && (
         <div className="flex items-center gap-4">
 
-          {/* Premium Users */}
+          {/* 🔔 Bell Notification */}
+          <NotificationBell />
 
+          {/* Premium Users */}
           <PopOverJoinUs />
 
           {/* Issues */}

@@ -9,38 +9,87 @@ import { db } from "@/lib/firebase"
 /**
  * ===============================
  * Real-time listener for Orders
+ * WITH representative name join
  * ===============================
- *
- * ملاحظات مهمة:
- * - اسم الـ collection لازم يكون "orders"
- * - لازم كل order يكون عنده createdAt
- * - الكود متغلف try/catch علشان أي Error يبان
  */
 
 export function listenToOrders(callback) {
-  try {
-    // ⚠️ لو عندك Orders قديمة من غير createdAt
-    // استخدم query بدون orderBy مؤقتًا
-    const q = query(
-      collection(db, "orders"),
-      orderBy("createdAt", "desc")
-    )
+  let representativesMap = {}
 
-    return onSnapshot(
-      q,
-      (snapshot) => {
-        const orders = snapshot.docs.map((doc) => ({
+  // 1️⃣ Listen to representatives
+  const unsubscribeReps = onSnapshot(
+    collection(db, "representative"),
+    (repSnap) => {
+      representativesMap = {}
+
+      repSnap.docs.forEach((doc) => {
+        representativesMap[doc.id] = doc.data()
+      })
+    }
+  )
+
+  // 2️⃣ Listen to orders
+  const q = query(
+    collection(db, "orders"),
+    orderBy("createdAt", "desc")
+  )
+
+  const unsubscribeOrders = onSnapshot(
+    q,
+    (snapshot) => {
+      const orders = snapshot.docs.map((doc) => {
+        const data = doc.data()
+        const rep = representativesMap[data.representativeId]
+
+        return {
           id: doc.id,
-          ...doc.data(),
-        }))
 
-        callback(orders)
-      },
-      (error) => {
-        console.error("🔥 Firestore onSnapshot error:", error)
-      }
-    )
-  } catch (error) {
-    console.error("🔥 listenToOrders error:", error)
+          // ===== UI FIELDS =====
+          orderNumber: doc.id,
+          customerName: data.customer?.name || "",
+
+          agentId: data.representativeId || "",
+          agentName: rep?.nameAr || "غير معروف",
+
+          status: mapOrderStatus(data.status),
+          createdAt: data.createdAt || null,
+
+          amount: data.totalPrice || 0,
+        }
+      })
+
+      callback(orders)
+    },
+    (error) => {
+      console.error("🔥 listenToOrders error:", error)
+    }
+  )
+
+  // 3️⃣ Return combined unsubscribe
+  return () => {
+    unsubscribeOrders()
+    unsubscribeReps()
+  }
+}
+
+/* ===============================
+   Helpers
+================================ */
+function mapOrderStatus(status) {
+  switch (status) {
+    case "assigned":
+      return "warehouse"
+    case "on_the_way":
+      return "on_the_way"
+    case "delivered":
+      return "delivered"
+    case "processing":
+      return "processing"
+    case "returned":
+      return "returned"
+    case "cancelled":
+      return "cancelled"
+    default:
+      return "warehouse"
   }
 }

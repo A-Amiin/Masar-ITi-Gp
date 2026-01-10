@@ -24,11 +24,7 @@ export default function MessageForm({ onSend }) {
       onSubmit={handleSubmit(onSubmit)}
       className="border-t p-3 flex gap-2"
     >
-      <Input
-        {...register("message")}
-        placeholder="اكتب رسالة..."
-      />
-
+      <Input {...register("message")} placeholder="اكتب رسالة..." />
       <Button type="submit" size="icon">
         <Send size={16} />
       </Button>
