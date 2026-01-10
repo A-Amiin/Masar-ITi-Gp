@@ -16,7 +16,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Route } from "lucide-react";
 
 import { collection, getDocs } from "firebase/firestore";
@@ -24,6 +23,7 @@ import { db } from "@/lib/firebase";
 
 import AssignTaskModal from "./AssignTaskModal";
 import AssignSuccessModal from "./AssignSuccessModal";
+
 const TASK_TYPES = [
   { value: "delivery", label: "توصيل" },
   { value: "collection", label: "تحصيل" },
@@ -35,88 +35,103 @@ const AssignForm = ({
   onOptimizeRoute,
   onAreaChange,
   onConfirmTask,
+  customersInsideArea,
 }) => {
   const [openConfirm, setOpenConfirm] = useState(false);
   const [openSuccess, setOpenSuccess] = useState(false);
 
-  // المناطق من GeoJSON
+  // المناطق
   const [areas, setAreas] = useState([]);
   const [selectedArea, setSelectedArea] = useState(null);
 
-  // منتجات المخزون
+  // المندوبين
+  const [agents, setAgents] = useState([]);
+  const [selectedAgent, setSelectedAgent] = useState(null);
+
+  // المخزون
   const [inventory, setInventory] = useState([]);
-  const [selectedProducts, setSelectedProducts] = useState([]);
-const [agents, setAgents] = useState([]);
-const [selectedAgent, setSelectedAgent] = useState(null);
 
-  // نوع المهمة
-  const [taskType, setTaskType] = useState(null);
+  // 👇 المصدر الوحيد للحقيقة
+  const [customerTasks, setCustomerTasks] = useState({});
 
-  /* =======================
-     تحميل المناطق
-  ======================= */
+  /* تحميل المناطق */
   useEffect(() => {
     fetch("/areas.json")
       .then((res) => res.json())
-      .then((data) => {
-        setAreas(data.features || []);
-      })
+      .then((data) => setAreas(data.features || []))
       .catch(console.error);
   }, []);
-useEffect(() => {
-  const fetchAgents = async () => {
-    const snap = await getDocs(collection(db, "representative"));
 
-    const data = snap.docs.map((doc) => ({
-      id: doc.id,
-      name: doc.data().nameAr || doc.data().nameEn,
-      phone: doc.data().phone,
-      governorateAr: doc.data().governorateAr,
-      governorateEn: doc.data().governorateEn,
-      userId: doc.data().userId,
-    }));
+  /* تحميل المندوبين */
+  useEffect(() => {
+    const fetchAgents = async () => {
+      const snap = await getDocs(collection(db, "representative"));
+      setAgents(
+        snap.docs.map((doc) => ({
+          id: doc.id,
+          name: doc.data().nameAr || doc.data().nameEn,
+          phone: doc.data().phone,
+        }))
+      );
+    };
+    fetchAgents();
+  }, []);
 
-    setAgents(data);
-  };
-
-  fetchAgents();
-}, []);
-
-  /* =======================
-     تحميل المخزون من Firebase
-  ======================= */
+  /* تحميل المخزون */
   useEffect(() => {
     const fetchInventory = async () => {
       const snap = await getDocs(collection(db, "inventory"));
-      const data = snap.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-      setInventory(data);
+      setInventory(
+        snap.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }))
+      );
     };
-
     fetchInventory();
   }, []);
 
-  /* =======================
-     Helpers
-  ======================= */
   const selectedAreaObject = areas.find(
     (area) => String(area.id) === selectedArea
   );
 
-  const toggleProduct = (product) => {
-    setSelectedProducts((prev) => {
-      const exists = prev.find((p) => p.id === product.id);
-      return exists
-        ? prev.filter((p) => p.id !== product.id)
-        : [...prev, product];
+  /* ===== Helpers ===== */
+
+  const toggleCustomerProduct = (customerId, product) => {
+    setCustomerTasks((prev) => {
+      const customer = prev[customerId] || {};
+      const products = customer.products || [];
+
+      const exists = products.find((p) => p.id === product.id);
+
+      return {
+        ...prev,
+        [customerId]: {
+          ...customer,
+          products: exists
+            ? products.filter((p) => p.id !== product.id)
+            : [...products, { ...product, quantity: 1 }],
+        },
+      };
     });
   };
 
-  /* =======================
-     Render
-  ======================= */
+  const changeQuantity = (customerId, productId, delta) => {
+    setCustomerTasks((prev) => ({
+      ...prev,
+      [customerId]: {
+        ...prev[customerId],
+        products: prev[customerId].products.map((p) =>
+          p.id === productId
+            ? { ...p, quantity: Math.max(1, p.quantity + delta) }
+            : p
+        ),
+      },
+    }));
+  };
+
+  /* ===== Render ===== */
+
   return (
     <>
       <Card className="h-full" dir="rtl">
@@ -125,38 +140,30 @@ useEffect(() => {
         </CardHeader>
 
         <CardContent className="space-y-4">
-       <div>
-  <label className="text-sm text-muted-foreground">
-    اختر المندوب
-  </label>
+          {/* المندوب */}
+          <div>
+            <label className="text-sm text-muted-foreground">
+              اختر المندوب
+            </label>
+            <Select
+              onValueChange={(value) =>
+                setSelectedAgent(agents.find((a) => a.id === value))
+              }
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="اختر المندوب" />
+              </SelectTrigger>
+              <SelectContent>
+                {agents.map((agent) => (
+                  <SelectItem key={agent.id} value={agent.id}>
+                    {agent.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
 
-  <Select
-    onValueChange={(value) => {
-      const agent = agents.find((a) => a.id === value);
-      setSelectedAgent(agent);
-    }}
-  >
-    <SelectTrigger>
-      <SelectValue placeholder="اختر المندوب" />
-    </SelectTrigger>
-
-    <SelectContent>
-      {agents.length ? (
-        agents.map((agent) => (
-          <SelectItem key={agent.id} value={agent.id}>
-            {agent.name}
-          </SelectItem>
-        ))
-      ) : (
-        <div className="px-3 py-2 text-sm text-muted-foreground">
-          لا يوجد مندوبين
-        </div>
-      )}
-    </SelectContent>
-  </Select>
-</div>
-
-          {/* اختيار المنطقة */}
+          {/* المنطقة */}
           <div>
             <label className="text-sm text-muted-foreground">
               اختر المنطقة
@@ -172,83 +179,113 @@ useEffect(() => {
               </SelectTrigger>
               <SelectContent>
                 {areas.map((feature) => (
-                  <SelectItem
-                    key={feature.id}
-                    value={String(feature.id)}
-                  >
+                  <SelectItem key={feature.id} value={String(feature.id)}>
                     {feature.properties?.SHYK_ANA_1}
                   </SelectItem>
                 ))}
               </SelectContent>
             </Select>
           </div>
-          {/* اختيار منتجات من المخزون (Multi Select حقيقي) */}
-          <div>
-            <label className="text-sm text-muted-foreground">
-              اختر المنتجات
-            </label>
 
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant="outline"
-                  className="w-full justify-start"
-                >
-                  {selectedProducts.length
-                    ? `تم اختيار ${selectedProducts.length} منتج`
-                    : "اختر المنتجات"}
-                </Button>
-              </DropdownMenuTrigger>
+          {/* إعدادات كل عميل */}
+          {customersInsideArea?.length > 0 && (
+            <div className="space-y-4 max-h-96 overflow-y-auto border rounded-md p-3">
+              <p className="text-sm font-medium">إعدادات كل عميل</p>
 
-              <DropdownMenuContent className="w-72 max-h-64 overflow-y-auto">
-                {inventory.map((product) => {
-                  const checked = selectedProducts.some(
-                    (p) => p.id === product.id
-                  );
+              {customersInsideArea.map((customer) => {
+                const task = customerTasks[customer.id] || {};
+                const products = task.products || [];
 
-                  return (
-                    <DropdownMenuCheckboxItem
-                      key={product.id}
-                      checked={checked}
-                      onCheckedChange={() => toggleProduct(product)}
+                return (
+                  <Card key={customer.id} className="p-3 space-y-3">
+                    <div className="font-medium">{customer.name}</div>
+
+                    {/* نوع المهمة */}
+                    <Select
+                      onValueChange={(value) =>
+                        setCustomerTasks((prev) => ({
+                          ...prev,
+                          [customer.id]: {
+                            ...prev[customer.id],
+                            taskType: value,
+                          },
+                        }))
+                      }
                     >
-                      <div className="flex flex-col">
-                        <span>
-                          {product.nameAr || product.nameEn}
-                        </span>
-                        <span className="text-xs text-muted-foreground">
-                          السعر: {product.priceAfterDiscount ?? product.price}
-                        </span>
-                      </div>
-                    </DropdownMenuCheckboxItem>
-                  );
-                })}
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
-<div>
-  <label className="text-sm text-muted-foreground">
-    نوع المهمة
-  </label>
+                      <SelectTrigger>
+                        <SelectValue placeholder="نوع المهمة" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {TASK_TYPES.map((t) => (
+                          <SelectItem key={t.value} value={t.value}>
+                            {t.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
 
-  <Select onValueChange={setTaskType}>
-    <SelectTrigger>
-      <SelectValue placeholder="نوع المهمة" />
-    </SelectTrigger>
+                    {/* المنتجات */}
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="outline" className="w-full justify-start">
+                          {products.length
+                            ? `تم اختيار ${products.length} منتج`
+                            : "اختر المنتجات"}
+                        </Button>
+                      </DropdownMenuTrigger>
 
-    <SelectContent>
-      {TASK_TYPES.map((type) => (
-        <SelectItem key={type.value} value={type.value}>
-          {type.label}
-        </SelectItem>
-      ))}
-    </SelectContent>
-  </Select>
-</div>
+                      <DropdownMenuContent className="w-72 max-h-64 overflow-y-auto">
+                        {inventory.map((product) => {
+                          const selected = products.find(
+                            (p) => p.id === product.id
+                          );
 
-          {/* تحديد أفضل مسار */}
+                          return (
+                            <DropdownMenuCheckboxItem
+                              key={product.id}
+                              checked={!!selected}
+                              onCheckedChange={() =>
+                                toggleCustomerProduct(customer.id, product)
+                              }
+                              className="flex justify-between gap-2"
+                            >
+                              <span>{product.nameAr || product.nameEn}</span>
+
+                              {selected && (
+                                <div
+                                  onClick={(e) => e.stopPropagation()}
+                                  className="flex items-center gap-2"
+                                >
+                                  <button
+                                    onClick={() =>
+                                      changeQuantity(customer.id, product.id, -1)
+                                    }
+                                  >
+                                    −
+                                  </button>
+                                  <span>{selected.quantity}</span>
+                                  <button
+                                    onClick={() =>
+                                      changeQuantity(customer.id, product.id, 1)
+                                    }
+                                  >
+                                    +
+                                  </button>
+                                </div>
+                              )}
+                            </DropdownMenuCheckboxItem>
+                          );
+                        })}
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </Card>
+                );
+              })}
+            </div>
+          )}
+
+          {/* أفضل مسار */}
           <Button
-            type="button"
             variant="outline"
             className="w-full flex items-center gap-2"
             onClick={() => onOptimizeRoute?.(selectedAreaObject)}
@@ -257,43 +294,37 @@ useEffect(() => {
             تحديد أفضل مسار للمندوب
           </Button>
 
-          {/* توزيع مهمة */}
+          {/* تأكيد */}
           <Button
             className="w-full"
-            disabled={!selectedArea || !selectedProducts.length}
+            disabled={!selectedAgent || !selectedArea}
             onClick={() => setOpenConfirm(true)}
           >
             توزيع مهمة
           </Button>
         </CardContent>
       </Card>
-<AssignTaskModal
-  open={openConfirm}
-  onClose={() => setOpenConfirm(false)}
-  onConfirm={() => {
-    onConfirmTask({
-      agent: selectedAgent,
-      taskType,
-      area: selectedAreaObject,
-      products: selectedProducts,
-    });
 
-    setOpenConfirm(false);
-    setOpenSuccess(true);
-  }}
-  agent={selectedAgent}
-  taskType={taskType}
-  area={selectedAreaObject}
-  products={selectedProducts}
-/>
+      <AssignTaskModal
+        open={openConfirm}
+        onClose={() => setOpenConfirm(false)}
+        onConfirm={() => {
+          onConfirmTask({
+            representativeId: selectedAgent.id,
+            area: selectedAreaObject,
+            customerTasks,
+          });
+          setOpenConfirm(false);
+          setOpenSuccess(true);
+        }}
+        agent={selectedAgent}
+        area={selectedAreaObject}
+      />
 
-
- <AssignSuccessModal
-  open={openSuccess}
-  onClose={() => setOpenSuccess(false)}
-/>
-
-
+      <AssignSuccessModal
+        open={openSuccess}
+        onClose={() => setOpenSuccess(false)}
+      />
     </>
   );
 };

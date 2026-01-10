@@ -153,7 +153,10 @@
   --sidebar-border: rgba(255, 255, 255, 0.1);
   --sidebar-ring: var(--brand-primary);
 }
-
+.leaflet-container {
+  position: relative;
+  z-index: 1;
+}
 /* ===============================
    Base Styles
 ================================ */
@@ -164,5 +167,35 @@
 
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+@layer utilities {
+  .scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--border)) transparent;
+  }
+
+  .scrollbar::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .scrollbar::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0); 
+  }
+
+  /* Thumb */
+  .scrollbar::-webkit-scrollbar-thumb {
+    background-color: hsl(var(--border));
+    border-radius: 9999px;
+  }
+
+  /* Dark Mode */
+  .dark .scrollbar::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.25); 
+  }
+
+  .dark .scrollbar::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0);
   }
 }

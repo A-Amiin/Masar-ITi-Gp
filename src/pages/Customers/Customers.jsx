@@ -32,6 +32,7 @@ const Customers = () => {
           columns={columns}
           data={customers}
           handleCreate={() => setOpen(true)}
+          enableCreate={false}
         />
       </div>
 

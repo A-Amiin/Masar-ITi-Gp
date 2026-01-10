@@ -7,7 +7,7 @@ import { Briefcase } from "lucide-react"
 const PopOverJoinUs = () => {
     const navigate = useNavigate();
     const { items: application } = useUnreadNotifications("join_us");
-
+    
     return (
         <Popover>
             <PopoverTrigger asChild>
@@ -22,8 +22,8 @@ const PopOverJoinUs = () => {
                     bg-red-500
                     rounded-full
                   " >
-                    {application.length}
-                  </span>
+                            {application.length}
+                        </span>
                     )}
                 </button>
             </PopoverTrigger>
@@ -43,8 +43,11 @@ const PopOverJoinUs = () => {
                             <button
                                 key={application.id}
                                 onClick={async () => {
-                                    await updateDoc(doc(db, "contact_us", application.id), { isRead: true });
-                                    navigate(`/issues`);
+                                    await updateDoc(
+                                        doc(db, "join_us", application.id ),
+                                        { isRead: false }
+                                    );
+                                    navigate("/join-us");
                                 }}
                                 className="text-left p-2 rounded-md hover:bg-muted transition"
                             >
@@ -56,7 +59,7 @@ const PopOverJoinUs = () => {
                 </div>
 
                 <button
-                    onClick={() => navigate("/issues")}
+                    onClick={() => navigate("/join-us")}
                     className="
                   mt-2 text-xs text-primary
                   hover:underline w-full text-center

@@ -14,7 +14,6 @@
         const saved = localStorage.getItem("theme-storage");
         if (saved) {
           const { state } = JSON.parse(saved);
-          console.log(state)
           document.documentElement.classList.toggle("dark", state.theme === "dark");
         }
       })();

@@ -8,7 +8,6 @@ export default function UserAvatarDialog({ user }) {
   const [open, setOpen] = useState(false);
 
   if (!user) return null;
-  console.log("agwsrsrtfgw"+user)
 
   return (
     <>

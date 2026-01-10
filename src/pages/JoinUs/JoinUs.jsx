@@ -4,31 +4,44 @@ import { getColumns } from "./components/columns"
 import ViewUserDialog from "./components/ViewIssueDialog"
 
 const JoinUs = () => {
-  const {
-    Items: applications,
-    loading,
-    error,
-    useEdit,
-    useDelete,
-    selectedItem,
-    closeView,
-  } = useCrudService("join_us")
+  const { Items: applications, loading, error, setItems, useEdit, useDelete, selectedItem, closeView } = useCrudService("join_us")
 
-  const handleMarkReviewed = async (id) => {
-    await useEdit(id, {
-      isRead: true,
-      status: "reviewed",
-    })
+  const handleChangeStatus = async (id, status) => {
+    setItems(prev =>
+      prev.map(item =>
+        item.id === id ? { ...item, status, isRead: true } : item
+      )
+    )
+
+    try {
+      await useEdit(id, { status, isRead: true })
+    } catch (err) {
+      console.error("Failed to update status:", err)
+      setItems(prev =>
+        prev.map(item =>
+          item.id === id ? { ...item, status: prev.find(i => i.id === id).status } : item
+        )
+      )
+    }
+  }
+
+  const handleDelete = async (id) => {
+    setItems(prev => prev.filter(item => item.id !== id))
+    await useDelete(id)
+  }
+
+  const handleView = async (item) => {
+    if (item.status === "new") {
+      await handleChangeStatus(item.id, "reviewed")
+    }
   }
 
   const columns = getColumns(
     (item) => {
-      if (item.status === "new") {
-        handleMarkReviewed(item.id)
-      }
+      handleView(item)
     },
-    (id) => useDelete(id),
-    handleMarkReviewed
+    handleDelete,
+    handleChangeStatus
   )
 
   if (loading) return <p>جاري التحميل...</p>
@@ -38,11 +51,12 @@ const JoinUs = () => {
     <div className="space-y-4">
       <h1 className="text-xl font-bold">طلبات الانضمام</h1>
 
-      <div className="border rounded-md p-4">
+      <div className="border rounded-md p-4 bg-white dark:bg-black/50">
         <DataTable
           columns={columns}
           data={applications}
           searchPlaceholder="ابحث بالاسم أو رقم الهاتف..."
+          enableCreate={false}
         />
       </div>
 

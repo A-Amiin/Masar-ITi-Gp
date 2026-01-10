@@ -52,7 +52,7 @@ const AssignTaskModal = ({
           </div>
 
           {/* نوع المهمة */}
-          <div className="flex items-center gap-3 bg-muted p-3 rounded-md">
+          {/* <div className="flex items-center gap-3 bg-muted p-3 rounded-md">
             <CheckCircle className="w-5 h-5 text-teal-500" />
             <div>
               <p className="font-medium">نوع المهمة</p>
@@ -68,7 +68,7 @@ const AssignTaskModal = ({
 </p>
 
             </div>
-          </div>
+          </div> */}
 
           {/* المنطقة */}
           <div className="flex items-center gap-3 bg-muted p-3 rounded-md">
@@ -82,7 +82,7 @@ const AssignTaskModal = ({
           </div>
 
           {/* المنتجات */}
-          <div className="flex items-start gap-3 bg-muted p-3 rounded-md">
+          {/* <div className="flex items-start gap-3 bg-muted p-3 rounded-md">
             <Package className="w-5 h-5 text-purple-500 mt-1" />
             <div className="w-full">
               <p className="font-medium mb-1">المنتجات</p>
@@ -99,7 +99,7 @@ const AssignTaskModal = ({
                 <p className="text-muted-foreground">لا يوجد منتجات</p>
               )}
             </div>
-          </div>
+          </div> */}
         </div>
 
         <DialogFooter className="flex gap-2 sm:justify-start">
