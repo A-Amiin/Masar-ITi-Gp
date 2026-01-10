@@ -1,5 +1,5 @@
 import { Link, useLocation, useNavigate } from "react-router-dom"
-import { LayoutGrid, Users, User, MapPin, Box, ShoppingCart, FileText, MessageSquare, Settings, LogOut, ChevronLeft, UserPlus, Inbox, Briefcase } from "lucide-react"
+import { LayoutGrid, Users, MapPin, Box, ShoppingCart, FileText, MessageSquare, Settings, LogOut, ChevronLeft, UserPlus, Inbox, Briefcase, BookUser } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { useState } from "react"
@@ -8,16 +8,16 @@ import useAuthStore from "@/store/authStore"
 
 const menuItems = [
   { label: "لوحة التحكم", icon: LayoutGrid, route: "/dashboard" },
-  { label: "إضافة مستخدم", icon: UserPlus, route: "/add-user" },
-  { label: "طلبات التوظيف", icon: Briefcase, route: "/join-us" },
-  { label: "طلبات الدعم", icon: Inbox, route: "/issues" },
-  { label: "العملاء", icon: User, route: "/customers" },
+  { label: "إضافة مستخدمين", icon: UserPlus, route: "/add-user" },
+  { label: "العملاء", icon: BookUser, route: "/customers" },
   { label: "المندوبين", icon: Users, route: "/agents" },
   { label: "الطلبات", icon: ShoppingCart, route: "/orders" },
   { label: "الدردشة", icon: MessageSquare, route: "/chat" },
   { label: "توزيع المهام", icon: MapPin, route: "/tasks" },
   { label: "المخزون", icon: Box, route: "/inventory" },
   { label: "التقارير", icon: FileText, route: "/reports" },
+  { label: "طلبات الدعم", icon: Inbox, route: "/issues" },
+  { label: "طلبات التوظيف", icon: Briefcase, route: "/join-us" },
   { label: "الإعدادات", icon: Settings, route: "/settings" },
 ]
 
