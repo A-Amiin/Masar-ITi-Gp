@@ -12,6 +12,7 @@ const menuItems = [
   { label: "العملاء", icon: BookUser, route: "/customers" },
   { label: "المندوبين", icon: Users, route: "/agents" },
   { label: "الطلبات", icon: ShoppingCart, route: "/orders" },
+  { label: "الطلبات الجديدة", icon: ShoppingCart, route: "/new-orders" },
   { label: "الدردشة", icon: MessageSquare, route: "/chat" },
   { label: "توزيع المهام", icon: MapPin, route: "/tasks" },
   { label: "المخزون", icon: Box, route: "/inventory" },

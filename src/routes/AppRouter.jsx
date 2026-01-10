@@ -10,6 +10,7 @@ import Customers from "@/pages/Customers/Customers";
 import Tasks from "@/pages/Tasks/Tasks";
 import Inventory from "@/pages/Inventory/Inventory";
 import Orders from "@/pages/Orders/Orders";
+import NewOrders from "@/pages/NewOrders/NewOrders";
 import Reports from "@/pages/Reports/Reports";
 import Chat from "@/pages/Chat/Chat";
 import Issues from "@/pages/Issues/Issues";
@@ -36,6 +37,7 @@ const AppRouter = () => {
             <Route path="/tasks" element={<Tasks />} />
             <Route path="/inventory" element={<Inventory />} />
             <Route path="/orders" element={<Orders />} />
+            <Route path="/new-orders" element={<NewOrders />} />
             <Route path="/reports" element={<Reports />} />
             <Route path="/chat" element={<Chat />} />
             <Route path="/issues" element={<Issues />} />
