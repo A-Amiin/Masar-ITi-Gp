@@ -8,11 +8,12 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "
 function TableRowActions({ row, onView, onDelete, onChangeStatus }) {
   const [openDelete, setOpenDelete] = useState(false)
 
-  const handleView = async () => {
-    if (row.original.status === "new") {
-      await onChangeStatus(row.original.id, "reviewed")
-    }
+  const handleView = () => {
     onView(row.original)
+
+    if (row.original.status === "new") {
+      onChangeStatus(row.original.id, "reviewed")
+    }
   }
 
   const statuses = [

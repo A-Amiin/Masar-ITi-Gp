@@ -1,14 +1,23 @@
+import { useState } from "react"
 import { useCrudService } from "@/hooks/useCrudService"
 import { DataTable } from "@/components/ui/data-table"
 import { getColumns } from "./components/columns"
 import ViewUserDialog from "./components/ViewIssueDialog"
 
 const JoinUs = () => {
-  const { Items: applications, loading, error, setItems, useEdit, useDelete, selectedItem, closeView } = useCrudService("join_us")
+  // CRUD hook
+  const { Items: applications, loading, error, setItems, useEdit, useDelete } =
+    useCrudService("join_us")
 
+  // Local state for selected item & dialog
+  const [selectedItem, setSelectedItem] = useState(null)
+  const [open, setOpen] = useState(false)
+
+  // Change status function (optimistic update)
   const handleChangeStatus = async (id, status) => {
-    setItems(prev =>
-      prev.map(item =>
+    // Optimistically update UI
+    setItems((prev) =>
+      prev.map((item) =>
         item.id === id ? { ...item, status, isRead: true } : item
       )
     )
@@ -17,32 +26,34 @@ const JoinUs = () => {
       await useEdit(id, { status, isRead: true })
     } catch (err) {
       console.error("Failed to update status:", err)
-      setItems(prev =>
-        prev.map(item =>
-          item.id === id ? { ...item, status: prev.find(i => i.id === id).status } : item
+      // Revert if failed
+      setItems((prev) =>
+        prev.map((item) =>
+          item.id === id ? { ...item, status: prev.find((i) => i.id === id).status } : item
         )
       )
     }
   }
 
+  // Delete item
   const handleDelete = async (id) => {
-    setItems(prev => prev.filter(item => item.id !== id))
+    setItems((prev) => prev.filter((item) => item.id !== id))
     await useDelete(id)
   }
 
-  const handleView = async (item) => {
+  // View item: open dialog immediately, update status in background
+  const handleView = (item) => {
+    setSelectedItem(item) // open dialog immediately
+    setOpen(true)
+
+    // Update status in background if new
     if (item.status === "new") {
-      await handleChangeStatus(item.id, "reviewed")
+      handleChangeStatus(item.id, "reviewed")
     }
   }
 
-  const columns = getColumns(
-    (item) => {
-      handleView(item)
-    },
-    handleDelete,
-    handleChangeStatus
-  )
+  // Columns for DataTable
+  const columns = getColumns(handleView, handleDelete, handleChangeStatus)
 
   if (loading) return <p>جاري التحميل...</p>
   if (error) return <p>حدث خطأ أثناء جلب البيانات</p>
@@ -60,9 +71,10 @@ const JoinUs = () => {
         />
       </div>
 
+      {/* View Dialog */}
       <ViewUserDialog
-        open={!!selectedItem}
-        onOpenChange={(open) => !open && closeView()}
+        open={open}
+        onOpenChange={(isOpen) => !isOpen && setSelectedItem(null) && setOpen(false)}
         item={selectedItem}
       />
     </div>
