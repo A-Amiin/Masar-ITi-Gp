@@ -1,4 +1,4 @@
-import MessageActions from "@/components/components/MessageAction"
+import MessageActions from "./MessageAction"
 import { Badge } from "@/components/ui/badge"
 
 export const getColumns = (onView, onDelete, handleMarkRead) => [{
