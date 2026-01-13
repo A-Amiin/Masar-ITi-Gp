@@ -334,7 +334,7 @@ const [customerTasks, setCustomerTasks] = useState({});
 const [stats, setStats] = useState({
   assigned: 0,
   completed: 0,
-  returned: 0,
+  failed: 0,
   total: 0,
 });
 
@@ -504,10 +504,8 @@ const effectiveCustomers = useMemo(() => {
 
 
 const TASK_TYPE_LABELS = {
-  delivery: "توصيل",
-  collection: "تحصيل",
   return: "استرجاع",
-  pickup: "استلام",
+  delivery: "توصيل",
 };
 
 const handleConfirmTask = async ({
@@ -586,20 +584,20 @@ useEffect(() => {
   const unsub = onSnapshot(ordersRef, (snapshot) => {
     let assigned = 0;
     let completed = 0;
-    let returned = 0;
+    let failed = 0;
 
     snapshot.forEach((doc) => {
       const order = doc.data();
 
       if (order.status === "assigned") assigned++;
       if (order.status === "completed") completed++;
-      if (order.status === "returned") returned++;
+      if (order.status === "failed") failed++;
     });
 
     setStats({
       assigned,
       completed,
-      returned,
+      failed,
       total: snapshot.size, // كل المهام
     });
   });
@@ -633,7 +631,7 @@ useEffect(() => {
 <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
   <StatsCard title="معلقة" value={stats.assigned} />
   <StatsCard title="مكتملة" value={stats.completed} />
-  <StatsCard title="مرتجع" value={stats.returned} />
+  <StatsCard title="فاشلة" value={stats.failed} />
   <StatsCard title="المهام" value={stats.total} />
 </div>
 
