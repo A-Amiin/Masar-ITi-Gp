@@ -125,7 +125,7 @@ const Settings = () => {
               { label: "إصدار التطبيق", value: "v1.0.0" },
               { label: "اسم التطبيق", value: "Masar | مسار" },
               { label: "نوع المستخدم", value: "مسؤول" },
-              { label: "آخر تحديث", value: "December 2024" },
+              { label: "آخر تحديث", value: "Jan 2026" },
             ].map((item, idx) => (
               <div
                 key={idx}

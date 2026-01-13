@@ -64,7 +64,7 @@ export default function Footer() {
 
         {/* Bottom */}
         <div className="pb-6 text-center text-sm text-gray-400">
-          © 2025 Masar | مسار. جميع الحقوق محفوظة
+          © 2026 Masar | مسار. جميع الحقوق محفوظة
         </div>
 
       </div>
