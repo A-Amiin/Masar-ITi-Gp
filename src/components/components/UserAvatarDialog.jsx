@@ -14,7 +14,7 @@ export default function UserAvatarDialog({ user }) {
       {/* Avatar clickable */}
       <div
         onClick={() => setOpen(true)}
-        className="flex items-center gap-3 cursor-pointer"
+        className="flex items-center gap-3 cursor-pointer "
       >
         <Avatar className="h-9 w-9">
           <AvatarFallback>
@@ -34,16 +34,10 @@ export default function UserAvatarDialog({ user }) {
 
       {/* Dialog */}
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent
-          className="
-            max-w-sm
-            text-right
-            [&>button]:left-4
-            [&>button]:right-auto
-          "
-        >
+        <DialogContent className="max-w-sm [&>button]:left-4 [&>button]:right-auto">
+
           <DialogHeader dir="rtl">
-            <DialogTitle>معلومات المستخدم</DialogTitle>
+            <DialogTitle className="text-right">معلومات المستخدم</DialogTitle>
           </DialogHeader>
 
           <div className="flex flex-col items-center gap-4 py-4 text-center">

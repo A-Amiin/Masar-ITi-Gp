@@ -79,12 +79,12 @@ function TableRowActions({ row, onView, onDelete, onChangeStatus }) {
 
       {/* Confirm Delete */}
       <Dialog open={openDelete} onOpenChange={setOpenDelete}>
-        <DialogContent dir="rtl">
+        <DialogContent className="max-w-sm [&>button]:left-4 [&>button]:right-auto">
           <DialogHeader>
-            <DialogTitle>تأكيد الحذف</DialogTitle>
+            <DialogTitle className="text-right">تأكيد الحذف</DialogTitle>
           </DialogHeader>
 
-          <p className="py-4">
+          <p className="py-4 text-right">
             هل أنت متأكد أنك تريد حذف
             <strong> {row.original.name} </strong>؟
           </p>

@@ -43,7 +43,7 @@ export function CreateCustomerDialog({ open, onOpenChange, createCustomer }) {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-3xl [&>button]:left-4 [&>button]:right-auto">
+      <DialogContent className="max-w-sm [&>button]:left-4 [&>button]:right-auto">
         <DialogHeader>
           <DialogTitle className="text-right">إضافة عميل</DialogTitle>
         </DialogHeader>

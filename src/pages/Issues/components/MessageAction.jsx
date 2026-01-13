@@ -24,12 +24,12 @@ function MessageActions({ row, onView, onDelete, handleMarkRead }) {
       </Button>
 
       <Dialog open={openDialog} onOpenChange={setOpenDialog}>
-        <DialogContent dir="rtl">
+        <DialogContent className="max-w-sm [&>button]:left-4 [&>button]:right-auto">
           <DialogHeader>
-            <DialogTitle>تأكيد الحذف</DialogTitle>
+            <DialogTitle className="text-right">تأكيد الحذف</DialogTitle>
           </DialogHeader>
 
-          <p className="py-4">
+          <p className="py-4 text-right">
             هل أنت متأكد أنك تريد حذف رسالة
             <strong> {row.original.name} </strong>؟
           </p>
