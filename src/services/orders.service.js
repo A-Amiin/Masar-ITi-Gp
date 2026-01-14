@@ -3,73 +3,67 @@ import {
   onSnapshot,
   query,
   orderBy,
+  doc,
+  getDoc
 } from "firebase/firestore"
 import { db } from "@/lib/firebase"
 
 /**
  * ===============================
  * Real-time listener for Orders
- * WITH representative name join
+ * WITH agent name from ROOT representativeId
  * ===============================
  */
 
 export function listenToOrders(callback) {
-  let representativesMap = {}
-
-  // 1️⃣ Listen to representatives
-  const unsubscribeReps = onSnapshot(
-    collection(db, "representative"),
-    (repSnap) => {
-      representativesMap = {}
-
-      repSnap.docs.forEach((doc) => {
-        representativesMap[doc.id] = doc.data()
-      })
-    }
-  )
-
-  // 2️⃣ Listen to orders
   const q = query(
     collection(db, "orders"),
     orderBy("createdAt", "desc")
   )
 
-  const unsubscribeOrders = onSnapshot(
-    q,
-    (snapshot) => {
-      const orders = snapshot.docs.map((doc) => {
-        const data = doc.data()
-        const rep = representativesMap[data.representativeId]
+  return onSnapshot(q, async (snapshot) => {
+    const orders = await Promise.all(
+      snapshot.docs.map(async (docSnap) => {
+        const data = docSnap.data()
+
+        // ===== CUSTOMER =====
+        const customerName = data.customer?.name || data.customerName || ""
+
+        // ===== REPRESENTATIVE (FROM ROOT 🔥) =====
+        const representativeId = data.representativeId || data.agentId || ""
+
+        let agentName = "غير معروف"
+        if (representativeId) {
+          const repSnap = await getDoc(
+            doc(db, "representative", representativeId)
+          )
+          if (repSnap.exists()) {
+            agentName = repSnap.data().nameAr || "غير معروف"
+          }
+        }
+
+        // ===== PRICE =====
+        const amount = Number(data.totalPrice) || Number(data.amount) || 0
 
         return {
-          id: doc.id,
+          id: docSnap.id,
 
-          // ===== UI FIELDS =====
-          orderNumber: doc.id,
-          customerName: data.customer?.name || "",
+          orderNumber: docSnap.id,
+          customerName,
 
-          agentId: data.representativeId || "",
-          agentName: rep?.nameAr || "غير معروف",
+          agentId: representativeId,
+          agentName,
 
           status: mapOrderStatus(data.status),
           createdAt: data.createdAt || null,
 
-          amount: data.totalPrice || 0,
+          amount,
         }
       })
+    )
 
-      callback(orders)
-    },
-    (error) => {
-      console.error("🔥 listenToOrders error:", error)
-    }
-  )
-
-  // 3️⃣ Return combined unsubscribe
-  return () => {
-    unsubscribeOrders()
-    unsubscribeReps()
-  }
+    callback(orders)
+  })
 }
 
 /* ===============================

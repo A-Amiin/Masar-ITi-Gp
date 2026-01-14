@@ -3,8 +3,6 @@ import {
   doc,
   writeBatch,
   onSnapshot,
-  query,
-  orderBy,
   serverTimestamp,
   updateDoc,
   deleteDoc,
@@ -30,49 +28,68 @@ export async function addRepresentative(data) {
     nameEn: data.nameEn,
     phone: data.phone,
     email: data.email || null,
-    governorateAr: data.governorateAr,
-    governorateEn: data.governorateEn,
-    customersCount: data.customersCount,
-    ordersCount: data.ordersCount,
+
+    governorateAr: data.governorateAr || "",
+    governorateEn: data.governorateEn || "",
+
+    customersCount: Number(data.customersCount) || 0,
+    ordersCount: Number(data.ordersCount) || 0,
+
     userId: userRef.id,
-    createdAt: serverTimestamp(),
+
+    // 🔥 المناديب القدام ممكن ميكونش عندهم
+    createdAt: data.createdAt || serverTimestamp(),
   })
 
   await batch.commit()
 }
 
-/* ================= Listen ================= */
+/* ================= Listen (ALL representatives 🔥🔥) ================= */
 export function listenToAgents(callback) {
-  const q = query(
-    collection(db, "representative"),
-    orderBy("createdAt", "desc")
-  )
+  return onSnapshot(collection(db, "representative"), (snapshot) => {
+    const reps = snapshot.docs
+      .map((doc) => {
+        const data = doc.data()
 
-  return onSnapshot(q, (snapshot) => {
-    const reps = snapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-    }))
+        return {
+          id: doc.id,
+          ...data,
+
+          // ✅ ضمان القيم
+          customersCount: Number(data.customersCount) || 0,
+          ordersCount: Number(data.ordersCount) || 0,
+          governorateAr: data.governorateAr || "",
+          governorateEn: data.governorateEn || "",
+        }
+      })
+      // ✅ ترتيب في الكلاينت بدل Firestore
+      .sort((a, b) => {
+        const aTime = a.createdAt?.seconds || 0
+        const bTime = b.createdAt?.seconds || 0
+        return bTime - aTime
+      })
+
     callback(reps)
   })
 }
 
-/* ================= Update ================= */
+/* ================= Update (SAFE MERGE) ================= */
 export async function updateAgent(agentId, data) {
   const ref = doc(db, "representative", agentId)
 
-  await updateDoc(ref, {
-    phone: data.phone,
-    email: data.email,
-    governorateAr: data.governorateAr,
-    governorateEn: data.governorateEn,
+  const payload = {
     updatedAt: serverTimestamp(),
-  })
+  }
+
+  if (data.nameAr !== undefined) payload.nameAr = data.nameAr
+  if (data.phone !== undefined) payload.phone = data.phone
+  if (data.governorateAr !== undefined) payload.governorateAr = data.governorateAr
+  if (data.governorateEn !== undefined) payload.governorateEn = data.governorateEn
+
+  await updateDoc(ref, payload)
 }
 
 /* ================= Delete ================= */
 export async function deleteAgent(agentId) {
-  const repRef = doc(db, "representative", agentId)
-  await deleteDoc(repRef)
+  await deleteDoc(doc(db, "representative", agentId))
 }
-

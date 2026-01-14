@@ -3,7 +3,7 @@ import { Eye, Pencil, Trash2 } from "lucide-react"
 function Avatar({ name }) {
   return (
     <div className="h-9 w-9 rounded-full bg-primary text-white flex items-center justify-center text-sm font-semibold">
-      {name?.charAt(0)}
+      {name?.charAt(0) || "؟"}
     </div>
   )
 }
@@ -56,30 +56,41 @@ export default function AgentsTable({
                   <div className="flex items-center gap-3">
                     <Avatar name={agent.nameAr} />
                     <div className="leading-tight">
-                      <div className="font-medium">{agent.nameAr}</div>
+                      <div className="font-medium">
+                        {agent.nameAr || "—"}
+                      </div>
                       <div className="text-xs text-muted-foreground">
-                        {agent.email || "-"}
+                        {agent.email || "—"}
                       </div>
                     </div>
                   </div>
                 </td>
 
-                <td className="p-3">{agent.phone}</td>
-                <td className="p-3">{agent.governorateAr}</td>
+                {/* Phone */}
+                <td className="p-3">
+                  {agent.phone || "—"}
+                </td>
 
+                {/* Governorate */}
+                <td className="p-3">
+                  {agent.governorateAr || "غير محدد"}
+                </td>
+
+                {/* Customers */}
                 <td className="p-3">
                   <span className="inline-flex rounded-full bg-cyan-100 px-2 py-0.5 text-xs text-cyan-700">
-                    {agent.customersCount}
+                    {agent.customersCount ?? "0"}
                   </span>
                 </td>
 
+                {/* Orders */}
                 <td className="p-3">
                   <span className="inline-flex rounded-full bg-blue-100 px-2 py-0.5 text-xs text-blue-700">
-                    {agent.ordersCount}
+                    {agent.ordersCount ?? "0"}
                   </span>
                 </td>
 
-                {/* ===== Actions ===== */}
+                {/* Actions */}
                 <td className="p-3">
                   <div className="flex gap-3">
                     <button
@@ -115,12 +126,12 @@ export default function AgentsTable({
 
       {/* ================= FOOTER ================= */}
       <div className="relative p-4 text-sm border rounded-lg">
-        {/* Info – يمين */}
+        {/* Info */}
         <div className="text-muted-foreground">
           عرض صفحة {page} من {totalPages} — إجمالي {totalItems} مندوب
         </div>
 
-        {/* Pagination – شمال */}
+        {/* Pagination */}
         <div className="absolute left-4 top-1/2 -translate-y-1/2 flex gap-2">
           <button
             onClick={() => onPageChange(1)}
