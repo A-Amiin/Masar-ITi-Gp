@@ -10,12 +10,7 @@ import { useForm } from "react-hook-form"
 import { useEffect } from "react"
 import { updateAgent } from "@/services/agents.service"
 
-
-export default function EditAgentDialog({
-  open,
-  onOpenChange,
-  agent,
-}) {
+export default function EditAgentDialog({ open, onOpenChange, agent }) {
   const {
     register,
     handleSubmit,
@@ -23,8 +18,8 @@ export default function EditAgentDialog({
     formState: { errors },
   } = useForm({
     defaultValues: {
+      nameAr: "",
       phone: "",
-      email: "",
       governorateAr: "",
       governorateEn: "",
     },
@@ -33,8 +28,8 @@ export default function EditAgentDialog({
   useEffect(() => {
     if (agent) {
       reset({
+        nameAr: agent.nameAr ?? "",
         phone: agent.phone ?? "",
-        email: agent.email ?? "",
         governorateAr: agent.governorateAr ?? "",
         governorateEn: agent.governorateEn ?? "",
       })
@@ -43,7 +38,16 @@ export default function EditAgentDialog({
 
   const onSubmit = async (values) => {
     try {
-      await updateAgent(agent.id, values)
+      await updateAgent(agent.id, {
+        nameAr: values.nameAr,
+        phone: values.phone,
+        governorateAr: values.governorateAr,
+        governorateEn: values.governorateEn,
+
+        // 🔒 الإيميل ثابت
+        email: agent.email ?? "",
+      })
+
       onOpenChange(false)
     } catch (err) {
       console.error("UPDATE ERROR 👉", err)
@@ -54,11 +58,10 @@ export default function EditAgentDialog({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent dir="rtl" className="max-w-2xl">
-        {/* ===== Header (يمين فعلي) ===== */}
         <DialogHeader className="flex flex-col items-end text-right">
           <DialogTitle>تعديل مندوب</DialogTitle>
           <p className="text-sm text-muted-foreground">
-            يمكنك تعديل رقم الهاتف والإيميل والمحافظة فقط
+            يمكنك تعديل الاسم ورقم الهاتف والمحافظة فقط
           </p>
         </DialogHeader>
 
@@ -70,92 +73,64 @@ export default function EditAgentDialog({
 
         {agent && (
           <>
-          <div
-  dir="rtl"
-  className="flex items-center justify-end gap-4 border rounded-lg p-4 mt-4"
->
-  {/* Avatar – على اليمين */}
-  <div className="h-12 w-12 rounded-full bg-primary text-white flex items-center justify-center text-lg font-bold">
-    {agent.nameAr?.charAt(0)}
-  </div>
+            {/* Header */}
+            <div className="flex items-center justify-end gap-4 border rounded-lg p-4 mt-4">
+              <div className="h-12 w-12 rounded-full bg-primary text-white flex items-center justify-center text-lg font-bold">
+                {agent.nameAr?.charAt(0)}
+              </div>
 
-  {/* Name + ID – بعده مباشرة */}
-  <div className="text-right">
-    <div className="font-semibold">{agent.nameAr}</div>
-    <div className="text-sm text-muted-foreground">
-      ID: {agent.companyId || "-"}
-    </div>
-  </div>
-</div>
+              <div className="text-right">
+                <div className="font-semibold">{agent.nameAr}</div>
+                <div className="text-sm text-muted-foreground">
+                  ID: {agent.id}
+                </div>
+              </div>
+            </div>
 
-            {/* ===== Form ===== */}
             <form
               onSubmit={handleSubmit(onSubmit)}
               className="space-y-4 pt-6 text-right"
             >
+              {/* ✅ اسم المندوب */}
+              <Field label="اسم المندوب" error={errors.nameAr?.message}>
+                <Input
+                  {...register("nameAr", {
+                    required: "الاسم مطلوب",
+                  })}
+                />
+              </Field>
+
+              {/* ✅ رقم الهاتف */}
               <Field label="رقم الهاتف" error={errors.phone?.message}>
                 <Input
                   {...register("phone", {
                     required: "رقم الهاتف مطلوب",
                     pattern: {
                       value: /^[0-9]+$/,
-                      message: "رقم الهاتف أرقام فقط",
+                      message: "أرقام فقط",
                     },
                   })}
                 />
               </Field>
 
-              <Field label="البريد الإلكتروني" error={errors.email?.message}>
-                <Input
-                  {...register("email", {
-                    required: "البريد الإلكتروني مطلوب",
-                    pattern: {
-                      value:
-                        /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/,
-                      message: "بريد إلكتروني غير صالح",
-                    },
-                  })}
-                  dir="ltr"
-                  className="text-right"
-                />
+              {/* ❌ الإيميل عرض فقط */}
+              <Field label="البريد الإلكتروني">
+                <Input value={agent.email || ""} disabled dir="ltr" />
               </Field>
 
+              {/* ✅ المحافظة */}
               <div className="grid grid-cols-2 gap-4">
-                <Field
-                  label="المحافظة (عربي)"
-                  error={errors.governorateAr?.message}
-                >
-                  <Input
-                    {...register("governorateAr", {
-                      required: "المحافظة مطلوبة",
-                      pattern: {
-                        value: /^[\u0600-\u06FF\s]+$/,
-                        message: "حروف عربية فقط",
-                      },
-                    })}
-                  />
+                <Field label="المحافظة (عربي)">
+                  <Input {...register("governorateAr")} />
                 </Field>
 
-                <Field
-                  label="المحافظة (إنجليزي)"
-                  error={errors.governorateEn?.message}
-                >
-                  <Input
-                    {...register("governorateEn", {
-                      required: "المحافظة مطلوبة",
-                      pattern: {
-                        value: /^[A-Za-z\s]+$/,
-                        message: "حروف إنجليزية فقط",
-                      },
-                    })}
-                    dir="ltr"
-                    className="text-right"
-                  />
+                <Field label="المحافظة (إنجليزي)">
+                  <Input {...register("governorateEn")} dir="ltr" />
                 </Field>
               </div>
 
-              {/* ===== Read Only ===== */}
-              <div className="grid grid-cols-3 gap-4 pt-4 text-right">
+              {/* Read only stats */}
+              <div className="grid grid-cols-3 gap-4 pt-4">
                 <ReadOnly
                   label="تاريخ الانضمام"
                   value={
@@ -168,31 +143,24 @@ export default function EditAgentDialog({
                 />
                 <ReadOnly
                   label="عدد العملاء"
-                  value={agent.customersCount ?? 0}
+                  value={agent.customersCount ?? "Not Assigned"}
                 />
                 <ReadOnly
                   label="عدد الطلبات"
-                  value={agent.ordersCount ?? 0}
+                  value={agent.ordersCount ?? "Not Assigned"}
                 />
               </div>
 
-              {/* ===== Actions (شمال فعلي) ===== */}
-<div className="flex gap-4 justify-end pt-4">
-  <Button
-    type="submit"
-    variant="default"
-  >
-    حفظ
-  </Button>
-  <Button
-    type="button"
-    variant="outline"
-    onClick={() => onOpenChange(false)}
-  >
-    إلغاء
-  </Button>
-</div>
-
+              <div className="flex gap-4 justify-end pt-4">
+                <Button type="submit">حفظ</Button>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => onOpenChange(false)}
+                >
+                  إلغاء
+                </Button>
+              </div>
             </form>
           </>
         )}
@@ -202,7 +170,6 @@ export default function EditAgentDialog({
 }
 
 /* ===== Helpers ===== */
-
 function Field({ label, error, children }) {
   return (
     <div className="space-y-1">
