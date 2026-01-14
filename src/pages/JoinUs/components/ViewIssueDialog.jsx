@@ -17,9 +17,9 @@ const ViewJoinDialog = ({ open, onOpenChange, item }) => {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent dir="rtl" className="max-w-md">
+      <DialogContent dir="rtl" className="max-w-sm [&>button]:left-4 [&>button]:right-auto">
         <DialogHeader>
-          <DialogTitle>تفاصيل طلب الانضمام</DialogTitle>
+          <DialogTitle className="text-right">تفاصيل طلب الانضمام</DialogTitle>
         </DialogHeader>
 
         <div className="grid gap-4 py-2 text-right">

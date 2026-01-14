@@ -13,7 +13,8 @@ export function OrderStatus() {
       completed: 0,
       assigned: 0,
       new: 0,
-      failed: 0,
+      on_the_way: 0,
+      cancelled: 0,
     }
 
     orders.forEach((order) => {
@@ -26,7 +27,8 @@ export function OrderStatus() {
       statusCount.completed,
       statusCount.assigned,
       statusCount.new,
-      statusCount.failed,
+      statusCount.on_the_way,
+      statusCount.cancelled,
     ]
   }, [orders])
 
@@ -39,23 +41,40 @@ export function OrderStatus() {
 
         <Pie
           data={{
-            labels: ["تم التوصيل", "قيد الشحن", "في الطريق", "الملغى"],
+            labels: ["جديد", "قيد الشحن", "في الطريق", "تم التوصيل", "الملغي"],
             datasets: [
               {
-                data: orderStatus,
-                backgroundColor: [
-                  "#1d4ed8",
-                  "#94a3b8",
-                  "#06b6d4",
-                  "#facc15",
+                data: [
+                  orderStatus[2],
+                  orderStatus[1],
+                  orderStatus[3],
+                  orderStatus[0],
+                  orderStatus[4],
                 ],
+                backgroundColor: [
+                  "#22c55e",
+                  "#93c5fd",
+                  "#06b6d4",
+                  "#16a34a",
+                  "#ef4444",
+                ],
+                borderWidth: 2,
+                borderColor: "#ffffff",
               },
             ],
           }}
           options={{
             plugins: {
               legend: {
-                labels: { color: textColor },
+                position: "bottom",
+                labels: {
+                  color: textColor,
+                  font: {
+                    size: 13,
+                    weight: "500",
+                  },
+                  padding: 16,
+                },
               },
             },
           }}

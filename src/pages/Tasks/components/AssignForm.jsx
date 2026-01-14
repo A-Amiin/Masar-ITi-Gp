@@ -26,9 +26,7 @@ import AssignSuccessModal from "./AssignSuccessModal";
 
 const TASK_TYPES = [
   { value: "delivery", label: "توصيل" },
-  { value: "collection", label: "تحصيل" },
   { value: "return", label: "استرجاع" },
-  { value: "pickup", label: "استلام" },
 ];
 
 const AssignForm = ({

@@ -27,7 +27,7 @@ export function CreateUserDialog({ open, onOpenChange, create }) {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-3xl">
+      <DialogContent className="max-w-sm [&>button]:left-4 [&>button]:right-auto">
         <DialogHeader>
           <DialogTitle className="text-right">
             إضافة مستخدم جديد

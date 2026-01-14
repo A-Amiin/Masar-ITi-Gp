@@ -51,7 +51,7 @@ export const getColumns = (onView, onDelete) => [
           </Button>
 
           <Dialog open={openDialog} onOpenChange={setOpenDialog}>
-            <DialogContent>
+            <DialogContent className="max-w-sm [&>button]:left-4 [&>button]:right-auto">
               <DialogHeader>
                 <DialogTitle className="text-right">
                   تأكيد الحذف

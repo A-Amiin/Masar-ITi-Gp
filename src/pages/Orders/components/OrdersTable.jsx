@@ -1,5 +1,18 @@
 import { Card } from "@/components/ui/card"
 
+const getStatusLabel = (status) => {
+  switch (status) {
+    case "assigned":
+      return "معلقة";
+    case "completed":
+      return "مكتملة";
+    case "failed":
+      return "فاشلة";
+    default:
+      return status;
+  }
+};
+
 export default function OrdersTable({ orders }) {
   return (
     <Card className="p-0 overflow-hidden">
@@ -35,7 +48,7 @@ export default function OrdersTable({ orders }) {
                   ? order.createdAt.toDate().toLocaleDateString("ar-EG")
                   : "-"}
               </td>
-              <td className="p-3">{order.status}</td>
+              <td className="p-3">{getStatusLabel(order.status)}</td>
             </tr>
           ))}
         </tbody>

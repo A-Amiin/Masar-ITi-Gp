@@ -16,14 +16,7 @@ const ViewCustomerDialog = ({ open, onOpenChange, customer }) => {
         if (!state) onOpenChange(false)
       }}
     >
-      <DialogContent
-        className="
-          max-w-md
-          bg-white dark:bg-zinc-900
-          text-zinc-900 dark:text-zinc-100
-          border border-zinc-200 dark:border-zinc-800
-        "
-      >
+      <DialogContent className="max-w-sm [&>button]:left-4 [&>button]:right-auto">
         <DialogHeader className="space-y-1">
           <DialogTitle className="text-right">
             تفاصيل العميل

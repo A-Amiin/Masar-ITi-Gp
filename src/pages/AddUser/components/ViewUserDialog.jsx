@@ -6,7 +6,7 @@ const ViewUserDialog = ({ open, onOpenChange, user }) => {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-md">
+      <DialogContent className="max-w-sm [&>button]:left-4 [&>button]:right-auto">
         <DialogHeader>
           <DialogTitle className="text-right">
             تفاصيل المستخدم
